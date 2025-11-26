@@ -65,7 +65,7 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
                     <TextBlock x:Name="CurrentTimeText" Text="00:00" Foreground="White" Width="60" TextAlignment="Right"/>
                     <Slider x:Name="PositionSlider"
-                        Minimum="0" Maximum="100"
+                        Minimum="0" Maximum="1"
                         ValueChanged="PositionSlider_ValueChanged"
                         IsMoveToPointEnabled="True"
                         PreviewMouseLeftButtonDown="PositionSlider_PreviewMouseLeftButtonDown"
@@ -89,16 +89,17 @@
                         </Slider.Template>
                     </Slider>
                     <TextBlock x:Name="TotalTimeText" Text="00:00" Foreground="White" Width="60"/>
-                    <!-- Sliders début et fin -->
+                    
                 </StackPanel>
+                <!-- Sliders début et fin -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
                     <TextBlock Text="Début :" Foreground="White" Width="60" />
-                    <Slider x:Name="StartLimitSlider" Minimum="0" Maximum="100" Width="480" ValueChanged="StartLimitSlider_ValueChanged"/>
+                    <Slider x:Name="StartLimitSlider" Minimum="0" Maximum="1" Width="480" ValueChanged="StartLimitSlider_ValueChanged"/>
                 <TextBlock x:Name="StartLimitText" Text="0%" Foreground="White" Width="50"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"  >
                     <TextBlock Text="Fin :" Foreground="White" Width="60"/>
-                    <Slider x:Name="EndLimitSlider" Minimum="0" Maximum="100" Width="480" ValueChanged="EndLimitSlider_ValueChanged"/>
+                    <Slider x:Name="EndLimitSlider" Minimum="0" Maximum="1" Width="480" ValueChanged="EndLimitSlider_ValueChanged"/>
                     <TextBlock x:Name="EndLimitText" Text="100%" Foreground="White" Width="50"/>
                 </StackPanel>
 

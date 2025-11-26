@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using WpfMediaPlayerRA.myutil;
+using WpfMediaPlayerRA.UtilWpf;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 
@@ -33,6 +34,8 @@ namespace WpfMediaPlayerRA {
 
         // Chemin d'exemple : remplace par ta vidéo
         private string _mediaPath = @"Q:\zulu\Release\demo\Q1.mkv";
+        private SliderStartEnd sliderStartEnd;
+        private readonly double TIMER_SPEED = 100;
 
         public MainWindow() {
             InitializeComponent();
@@ -55,12 +58,13 @@ namespace WpfMediaPlayerRA {
         private void init() {
             initListView();
             initButton();
-            timerInit();
+            timer_init();
             initMediaPlayer();
         }
 
         private void initListView() {
             LoadVideoFiles(@"Q:\zulu\Release\demo"); // Charge les fichiers dans la ListView
+            sliderStartEnd = new SliderStartEnd(StartLimitSlider, EndLimitSlider);
         }
 
         private void initMediaPlayer() {
@@ -130,22 +134,22 @@ namespace WpfMediaPlayerRA {
             //          _libVLC.Dispose();
         }
         #region timer
-        private void timerInit() {
+        private void timer_init() {
             // Timer UI : met à jour le slider de position et les textes
             _timerUI = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(AppConfig.)
+                Interval = TimeSpan.FromMilliseconds(TIMER_SPEED)
             };
-            _timerUI.Tick += timerEvent;
+            _timerUI.Tick += timer_event;
         }
 
-        private void timerStart() {
+        private void timer_start() {
 
             _timerUI.Start();
             // TODO Certains conteneurs mal muxés (MKV sans cues, MP3 VBR sans index, AVI incomplet) peuvent ne pas exposer une durée fiable.
         }
 
-        private void timerEvent(object sender, EventArgs e) {
+        private void timer_event(object sender, EventArgs e) {
 
             if (_mediaPlayer == null || _isSeekingByUser)
                 return;
@@ -158,8 +162,16 @@ namespace WpfMediaPlayerRA {
                 _mediaPlayer.Play();
             }
             // Position : 0..1 (float). Slider : 0..100
+            sliderStartEnd.gererSlider();
+
+            if (sliderStartEnd.startSlider_Or_EndSlider_Moved()) {
+                _mediaPlayer.Position = sliderStartEnd.getNewPosition();
+            }
+
             float pos = _mediaPlayer.Position; // 0..1
-            PositionSlider.Value = pos * 100.0;
+            PositionSlider.Value = pos;
+
+
 
             // Temps courant (ms)
             {
@@ -320,7 +332,7 @@ namespace WpfMediaPlayerRA {
             _mediaPlayer.Play(media);
             PlayPauseButton.Content = "Pause";
             PlayPauseButton.IsChecked = true;
-            timerStart();
+            timer_start();
         }
 
     }
