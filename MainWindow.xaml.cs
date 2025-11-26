@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Office2010.PowerPoint;
 using LibVLCSharp.Shared;
 using MirzaMediaPlayer;
@@ -13,6 +13,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using WpfMakeBack.Utilitaires;
 using WpfMediaPlayerRA.myutil;
 using WpfMediaPlayerRA.UtilWpf;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
@@ -26,6 +27,9 @@ namespace WpfMediaPlayerRA {
         LibVLC _libVLC;
         MediaPlayer _mediaPlayer;
         private DispatcherTimer _timerUI;
+
+        private BoutonToggle togglePausePlay;
+
         private bool _isSeekingByUser = false;
         private bool _endReached = false;
 
@@ -39,7 +43,6 @@ namespace WpfMediaPlayerRA {
 
         public MainWindow() {
             InitializeComponent();
-            Core.Initialize();
             //var label = new Label
             //{
             //    Content = "TEST",
@@ -50,8 +53,9 @@ namespace WpfMediaPlayerRA {
             //test.Children.Add(label);
 
             AppConfig = new AppConfig();
-            _libVLC = new LibVLC();
-            _mediaPlayer = new MediaPlayer(_libVLC);
+
+        //    togglePausePlay = new BoutonToggle(btnPlayPause, "pause", "play");
+
             init();
         }
         #region init
@@ -68,6 +72,11 @@ namespace WpfMediaPlayerRA {
         }
 
         private void initMediaPlayer() {
+            Core.Initialize();
+
+            _libVLC = new LibVLC();
+            _mediaPlayer = new MediaPlayer(_libVLC);
+
             // we need the VideoView to be fully loaded before setting a MediaPlayer on it.
             VideoView.Loaded += (sender, e) => VideoView.MediaPlayer = _mediaPlayer;
             //            Unloaded += Example2_Unloaded;
@@ -313,6 +322,7 @@ namespace WpfMediaPlayerRA {
             _mediaPlayer.Play(media);
             PlayPauseButton.Content = "Pause";
             PlayPauseButton.IsChecked = true;
+            sliderStartEnd.initSlider();
             timer_start();
         }
 
