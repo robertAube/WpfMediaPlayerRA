@@ -34,7 +34,7 @@ namespace WpfMediaPlayerRA.UtilWpf
             initSlider();
         }
 
-        private void initSlider() {
+        public void initSlider() {
             StartLimit = 0;
             EndLimit = MAX_END_LIMIT;
             savePosition();
