@@ -1,4 +1,6 @@
-﻿using LibVLCSharp.Shared;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office2010.PowerPoint;
+using LibVLCSharp.Shared;
 using MirzaMediaPlayer;
 using Models;
 using System;
@@ -22,7 +24,7 @@ namespace WpfMediaPlayerRA {
     public partial class MainWindow : Window {
         LibVLC _libVLC;
         MediaPlayer _mediaPlayer;
-        private DispatcherTimer _uiTimer;
+        private DispatcherTimer _timerUI;
         private bool _isSeekingByUser = false;
         private bool _endReached = false;
 
@@ -53,7 +55,7 @@ namespace WpfMediaPlayerRA {
         private void init() {
             initListView();
             initButton();
-            initTimer();
+            timerInit();
             initMediaPlayer();
         }
 
@@ -76,6 +78,7 @@ namespace WpfMediaPlayerRA {
             //        _uiTimer.Start();
             //    });
             //};
+
 
 
             // Abonner aux événements
@@ -127,16 +130,22 @@ namespace WpfMediaPlayerRA {
             //          _libVLC.Dispose();
         }
         #region timer
-        private void initTimer() {
+        private void timerInit() {
             // Timer UI : met à jour le slider de position et les textes
-            _uiTimer = new DispatcherTimer
+            _timerUI = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(200)
+                Interval = TimeSpan.FromMilliseconds(AppConfig.)
             };
-            _uiTimer.Tick += UiTimer_Tick;
+            _timerUI.Tick += timerEvent;
         }
 
-        private void UiTimer_Tick(object sender, EventArgs e) {
+        private void timerStart() {
+
+            _timerUI.Start();
+            // TODO Certains conteneurs mal muxés (MKV sans cues, MP3 VBR sans index, AVI incomplet) peuvent ne pas exposer une durée fiable.
+        }
+
+        private void timerEvent(object sender, EventArgs e) {
 
             if (_mediaPlayer == null || _isSeekingByUser)
                 return;
@@ -153,8 +162,18 @@ namespace WpfMediaPlayerRA {
             PositionSlider.Value = pos * 100.0;
 
             // Temps courant (ms)
-            long currentMs = _mediaPlayer.Time;
-            CurrentTimeText.Text = UtilDateTime.FormatTime(currentMs);
+            {
+                long currentMs = _mediaPlayer.Time;
+                CurrentTimeText.Text = UtilDateTime.FormatTime(currentMs);
+            }
+
+            // Temps longueur média
+            { //TODO Appellé toujours : on peut faire mieux?
+                long longeurMedia;
+                // Parse le média pour obtenir la durée
+                longeurMedia = _mediaPlayer.Length;
+                TotalTimeText.Text = UtilDateTime.FormatTime(_mediaPlayer.Length);
+            }
         }
         #endregion timer
 
@@ -170,7 +189,7 @@ namespace WpfMediaPlayerRA {
                 VideoView.MediaPlayer.Stop();
                 PositionSlider.Value = 0;
                 CurrentTimeText.Text = "00:00";
-                _uiTimer.Stop();
+                _timerUI.Stop();
             }
         }
         private void PositionSlider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
@@ -296,13 +315,12 @@ namespace WpfMediaPlayerRA {
         //    _mediaPlayer.Play(media);
         //    TotalTimeText.Text = FormatTime(_mediaPlayer.Length);
         //}
-        private void OpenAndPlay(string filePath) {
-            var media = new Media(_libVLC, filePath, FromType.FromPath);
-            TotalTimeText.Text = UtilDateTime.FormatTime(_mediaPlayer.Length);
+        private async void OpenAndPlay(string filePath) {
+            var media = new LibVLCSharp.Shared.Media(_libVLC, filePath, FromType.FromPath);
             _mediaPlayer.Play(media);
             PlayPauseButton.Content = "Pause";
             PlayPauseButton.IsChecked = true;
-            _uiTimer.Start();
+            timerStart();
         }
 
     }
