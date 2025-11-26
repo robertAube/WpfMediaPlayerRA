@@ -13,8 +13,6 @@ namespace WpfMediaPlayerRA.UtilWpf
         private Slider startSlider, endSlider;
         private readonly float MAX_END_LIMIT = 1;
         private readonly float NEAR_GAP_LIMIT = (float)0.02;
-        private readonly double TIMER_SPEED = 100 * 2;
-
 
         public float StartLimit {
             set {
@@ -56,21 +54,60 @@ namespace WpfMediaPlayerRA.UtilWpf
                     StartLimit = EndLimit - NEAR_GAP_LIMIT;
                 }
             }
+            if (endDeplaceVersGauche()) {
+                if (EndLimit == 0) {
+                    EndLimit = 0 + NEAR_GAP_LIMIT;
+                }
+                if (StartLimit > EndLimit) {
+                    EndLimit = StartLimit + NEAR_GAP_LIMIT;
+                }
+            }
+
+            savePosition();
         }
+
 
         private bool startDeplaceVersDroite() {
             return oldStartLimit < StartLimit;
         }
 
-        internal bool startSlider_Or_EndSlider_Moved() {
-            return startDeplaceVersDroite();
+        private bool endDeplaceVersGauche() {
+            return oldEndLimit > EndLimit;
+        }
+
+        private bool startLimite_depasse_mediaPosition(float mediaPosition) {
+            bool depasse = false;
+            depasse = StartLimit > mediaPosition;
+            return depasse;
         }
 
 
-        internal float getNewPosition() {
+        internal bool haveToChangeMediaPosition(float mediaPosition) { 
+            return startLimite_depasse_mediaPosition(mediaPosition) ||
+                mediaPosition_reachedLimitDroite(mediaPosition)
+                ;
+        }
+
+        private bool mediaPosition_reachedLimitDroite(float mediaPosition) {
+            bool limiteAtteinte = false;
+            limiteAtteinte = mediaPosition > EndLimit;
+            return limiteAtteinte;
+        }
+
+        internal float getNewPosition(float mediaPosition) {
+            float newPosition = 0;
+
+            if (startLimite_depasse_mediaPosition(mediaPosition) ) {
+                newPosition = StartLimit;
+            }
+            if (mediaPosition_reachedLimitDroite(mediaPosition)) {
+                newPosition = StartLimit;
+            }
+
             savePosition();
 
-            return StartLimit;
+            return newPosition;
         }
+
     }
 }

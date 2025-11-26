@@ -164,9 +164,10 @@ namespace WpfMediaPlayerRA {
             // Position : 0..1 (float). Slider : 0..100
             sliderStartEnd.gererSlider();
 
-            if (sliderStartEnd.startSlider_Or_EndSlider_Moved()) {
-                _mediaPlayer.Position = sliderStartEnd.getNewPosition();
+            if (sliderStartEnd.haveToChangeMediaPosition(_mediaPlayer.Position)) {
+                _mediaPlayer.Position = sliderStartEnd.getNewPosition(_mediaPlayer.Position);
             }
+
 
             float pos = _mediaPlayer.Position; // 0..1
             PositionSlider.Value = pos;
@@ -204,27 +205,7 @@ namespace WpfMediaPlayerRA {
                 _timerUI.Stop();
             }
         }
-        private void PositionSlider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            //       _isDragging = true;
-        }
-
-
-
-        private void PositionSlider_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            //       _isDragging = true;
-        }
-
-        private void PositionSlider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-
-            // Appliquer le seek à la position voulue
-            //if (mediaElementMain.NaturalDuration.HasTimeSpan && _mediaCanSeek) {
-            //    var target = TimeSpan.FromMilliseconds(sliderDuration.Value);
-            //    _isDragging = false;
-            //    mediaElementMain.Position = target;
-            //    textBlockProgress.Text = FormatTime(target);
-            //}
-            //_isDragging = false;
-        }
+ 
         // Début du drag sur le slider de position
         private void PositionSlider_DragStarted(object sender, DragStartedEventArgs e) {
             _isSeekingByUser = true;
