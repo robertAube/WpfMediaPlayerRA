@@ -11,6 +11,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using WpfMediaPlayerRA.myutil;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 
@@ -24,8 +25,7 @@ namespace WpfMediaPlayerRA {
         private DispatcherTimer _uiTimer;
         private bool _isSeekingByUser = false;
         private bool _endReached = false;
-        private float _startLimit = 0f; // en pourcentage (0..1)
-        private float _endLimit = 1f;   // en pourcentage (0..1)
+
 
         internal static AppConfig AppConfig { get; private set; }
 
@@ -49,7 +49,7 @@ namespace WpfMediaPlayerRA {
             _mediaPlayer = new MediaPlayer(_libVLC);
             init();
         }
-
+        #region init
         private void init() {
             initListView();
             initButton();
@@ -59,25 +59,6 @@ namespace WpfMediaPlayerRA {
 
         private void initListView() {
             LoadVideoFiles(@"Q:\zulu\Release\demo"); // Charge les fichiers dans la ListView
-        }
-
-
-        private void LoadVideoFiles(string folderPath) {
-            if (Directory.Exists(folderPath)) {
-
-                // Common video file extensions
-                string[] videoExtensions = { ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv" };
-
-                // Get all files and filter by extension
-                var videoFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly)
-                                          .Where(file => videoExtensions.Contains(Path.GetExtension(file).ToLower()))
-                                          .ToList();
-
-
-                foreach (var file in videoFiles) {
-                    FilesListView.Items.Add(System.IO.Path.GetFileName(file));
-                }
-            }
         }
 
         private void initMediaPlayer() {
@@ -102,14 +83,7 @@ namespace WpfMediaPlayerRA {
             //            _mediaPlayer.EncounteredError += MediaPlayer_EncounteredError;
 
         }
-        private void initTimer() {
-            // Timer UI : met à jour le slider de position et les textes
-            _uiTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(200)
-            };
-            _uiTimer.Tick += UiTimer_Tick;
-        }
+
         private void initButton() {
             // Événements media utiles
             _mediaPlayer.Paused += (s, e) => Dispatcher.Invoke(() =>
@@ -126,6 +100,26 @@ namespace WpfMediaPlayerRA {
                 //                _uiTimer.Stop();
             });
         }
+        #endregion init
+
+        private void LoadVideoFiles(string folderPath) {
+            if (Directory.Exists(folderPath)) {
+
+                // Common video file extensions
+                string[] videoExtensions = { ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv" };
+
+                // Get all files and filter by extension
+                var videoFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly)
+                                          .Where(file => videoExtensions.Contains(Path.GetExtension(file).ToLower()))
+                                          .ToList();
+
+
+                foreach (var file in videoFiles) {
+                    FilesListView.Items.Add(System.IO.Path.GetFileName(file));
+                }
+            }
+        }
+
 
         private void Example2_Unloaded(object sender, RoutedEventArgs e) {
             _mediaPlayer.Stop();
@@ -133,7 +127,35 @@ namespace WpfMediaPlayerRA {
             //          _libVLC.Dispose();
         }
         #region timer
+        private void initTimer() {
+            // Timer UI : met à jour le slider de position et les textes
+            _uiTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(200)
+            };
+            _uiTimer.Tick += UiTimer_Tick;
+        }
 
+        private void UiTimer_Tick(object sender, EventArgs e) {
+
+            if (_mediaPlayer == null || _isSeekingByUser)
+                return;
+
+            // fin atteinte
+            if (_endReached) {
+                _endReached = false;
+                _mediaPlayer.Stop();
+                _mediaPlayer.Position = 0f;
+                _mediaPlayer.Play();
+            }
+            // Position : 0..1 (float). Slider : 0..100
+            float pos = _mediaPlayer.Position; // 0..1
+            PositionSlider.Value = pos * 100.0;
+
+            // Temps courant (ms)
+            long currentMs = _mediaPlayer.Time;
+            CurrentTimeText.Text = UtilDateTime.FormatTime(currentMs);
+        }
         #endregion timer
 
         #region main events
@@ -151,17 +173,17 @@ namespace WpfMediaPlayerRA {
                 _uiTimer.Stop();
             }
         }
-        private void Slider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+        private void PositionSlider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             //       _isDragging = true;
         }
 
 
 
-        private void Slider_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+        private void PositionSlider_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             //       _isDragging = true;
         }
 
-        private void Slider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+        private void PositionSlider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
 
             // Appliquer le seek à la position voulue
             //if (mediaElementMain.NaturalDuration.HasTimeSpan && _mediaCanSeek) {
@@ -172,6 +194,25 @@ namespace WpfMediaPlayerRA {
             //}
             //_isDragging = false;
         }
+        // Début du drag sur le slider de position
+        private void PositionSlider_DragStarted(object sender, DragStartedEventArgs e) {
+            _isSeekingByUser = true;
+        }
+
+        // Fin du drag : on applique la position au lecteur
+        private void PositionSlider_DragCompleted(object sender, DragCompletedEventArgs e) {
+            if (_mediaPlayer == null) return;
+
+            double percent = PositionSlider.Value / PositionSlider.Maximum; // 0..1
+            _mediaPlayer.Position = (float)percent;
+
+            // Mettre à jour le temps courant affiché
+            long len = _mediaPlayer.Length;
+            CurrentTimeText.Text = UtilDateTime.FormatTime((long)(len * percent));
+
+            _isSeekingByUser = false;
+        }
+
 
         //void PlayButton_Click(object sender, RoutedEventArgs e) {
         //    if (!VideoView.MediaPlayer.IsPlaying) {
@@ -220,81 +261,13 @@ namespace WpfMediaPlayerRA {
             }
         }
         private void StartLimitSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            _startLimit = (float)(e.NewValue / 100);
-            StartLimitText.Text = $"{e.NewValue:F0}%";
+            //_startLimit = (float)(e.NewValue / 100);
+            //StartLimitText.Text = $"{e.NewValue:F0}%";
         }
 
         private void EndLimitSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            _endLimit = (float)(e.NewValue / 100);
-            EndLimitText.Text = $"{e.NewValue:F0}%";
-        }
-        #endregion main events
-
-        //private void OpenAndPlay(string path) {
-        //    var media = new Media(_libVLC, path, FromType.FromPath);
-        //    _mediaPlayer.Play(media);
-        //    TotalTimeText.Text = FormatTime(_mediaPlayer.Length);
-        //}
-        private void OpenAndPlay(string filePath) {
-            var media = new Media(_libVLC, filePath, FromType.FromPath);
-            TotalTimeText.Text = FormatTime(_mediaPlayer.Length);
-            _mediaPlayer.Play(media);
-            PlayPauseButton.Content = "Pause";
-            PlayPauseButton.IsChecked = true;
-            _uiTimer.Start();
-        }
-
-        private void UiTimer_Tick(object sender, EventArgs e) {
-
-            if (_mediaPlayer == null || _isSeekingByUser)
-                return;
-
-            // fin atteinte
-            if (_endReached) {
-                _endReached = false;
-                _mediaPlayer.Stop();
-                _mediaPlayer.Position = 0f;
-                _mediaPlayer.Play();
-            }
-            // Position : 0..1 (float). Slider : 0..100
-            float pos = _mediaPlayer.Position; // 0..1
-            PositionSlider.Value = pos * 100.0;
-
-            // Temps courant (ms)
-            long currentMs = _mediaPlayer.Time;
-            CurrentTimeText.Text = FormatTime(currentMs);
-        }
-
-        private void UpdateTotalTimeLabel() {
-            long len = _mediaPlayer.Length; // ms
-            TotalTimeText.Text = FormatTime(len);
-        }
-
-        private static string FormatTime(long milliseconds) {
-            if (milliseconds <= 0) return "00:00";
-            var ts = TimeSpan.FromMilliseconds(milliseconds);
-            return ts.Hours > 0
-                ? $"{ts.Hours:D2}:{ts.Minutes:D2}:{ts.Seconds:D2}"
-                : $"{ts.Minutes:D2}:{ts.Seconds:D2}";
-        }
-
-        // Début du drag sur le slider de position
-        private void PositionSlider_DragStarted(object sender, DragStartedEventArgs e) {
-            _isSeekingByUser = true;
-        }
-
-        // Fin du drag : on applique la position au lecteur
-        private void PositionSlider_DragCompleted(object sender, DragCompletedEventArgs e) {
-            if (_mediaPlayer == null) return;
-
-            double percent = PositionSlider.Value / PositionSlider.Maximum; // 0..1
-            _mediaPlayer.Position = (float)percent;
-
-            // Mettre à jour le temps courant affiché
-            long len = _mediaPlayer.Length;
-            CurrentTimeText.Text = FormatTime((long)(len * percent));
-
-            _isSeekingByUser = false;
+            //_endLimit = (float)(e.NewValue / 100);
+            //EndLimitText.Text = $"{e.NewValue:F0}%";
         }
 
         // Ajuster la position si l'utilisateur clique sans drag (ValueChanged)
@@ -309,7 +282,6 @@ namespace WpfMediaPlayerRA {
                 return;
         }
 
-
         private void FilesListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
             if (FilesListView.SelectedItem != null) {
                 string selectedFile = FilesListView.SelectedItem.ToString();
@@ -317,8 +289,21 @@ namespace WpfMediaPlayerRA {
                 OpenAndPlay(_mediaPath);
             }
         }
+        #endregion main events
 
-
+        //private void OpenAndPlay(string path) {
+        //    var media = new Media(_libVLC, path, FromType.FromPath);
+        //    _mediaPlayer.Play(media);
+        //    TotalTimeText.Text = FormatTime(_mediaPlayer.Length);
+        //}
+        private void OpenAndPlay(string filePath) {
+            var media = new Media(_libVLC, filePath, FromType.FromPath);
+            TotalTimeText.Text = UtilDateTime.FormatTime(_mediaPlayer.Length);
+            _mediaPlayer.Play(media);
+            PlayPauseButton.Content = "Pause";
+            PlayPauseButton.IsChecked = true;
+            _uiTimer.Start();
+        }
 
     }
 }
