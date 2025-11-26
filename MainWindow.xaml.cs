@@ -24,6 +24,8 @@ namespace WpfMediaPlayerRA {
         private DispatcherTimer _uiTimer;
         private bool _isSeekingByUser = false;
         private bool _endReached = false;
+        private float _startLimit = 0f; // en pourcentage (0..1)
+        private float _endLimit = 1f;   // en pourcentage (0..1)
 
         internal static AppConfig AppConfig { get; private set; }
 
@@ -78,7 +80,6 @@ namespace WpfMediaPlayerRA {
             }
         }
 
-
         private void initMediaPlayer() {
             // we need the VideoView to be fully loaded before setting a MediaPlayer on it.
             VideoView.Loaded += (sender, e) => VideoView.MediaPlayer = _mediaPlayer;
@@ -131,8 +132,11 @@ namespace WpfMediaPlayerRA {
             _mediaPlayer.Dispose();
             //          _libVLC.Dispose();
         }
+        #region timer
 
+        #endregion timer
 
+        #region main events
         private void MediaPlayer_EndReached(object? sender, EventArgs e) {
             // ⚠️ Cet événement se produit sur un thread de lecture, pas le thread UI.
             ThreadPool.QueueUserWorkItem(_ => _endReached = true);
@@ -215,6 +219,16 @@ namespace WpfMediaPlayerRA {
                 PlayPauseButton.IsChecked = true;
             }
         }
+        private void StartLimitSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            _startLimit = (float)(e.NewValue / 100);
+            StartLimitText.Text = $"{e.NewValue:F0}%";
+        }
+
+        private void EndLimitSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            _endLimit = (float)(e.NewValue / 100);
+            EndLimitText.Text = $"{e.NewValue:F0}%";
+        }
+        #endregion main events
 
         //private void OpenAndPlay(string path) {
         //    var media = new Media(_libVLC, path, FromType.FromPath);
