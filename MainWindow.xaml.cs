@@ -1,4 +1,4 @@
-using DocumentFormat.OpenXml.Bibliography;
+﻿using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Office2010.PowerPoint;
 using LibVLCSharp.Shared;
 using MirzaMediaPlayer;
@@ -60,10 +60,11 @@ namespace WpfMediaPlayerRA {
         }
         #region init
         private void init() {
+
             initListView();
-            initButton();
             timer_init();
             initMediaPlayer();
+            initButton();
         }
 
         private void initListView() {
@@ -102,19 +103,19 @@ namespace WpfMediaPlayerRA {
 
         private void initButton() {
             // Événements media utiles
-            _mediaPlayer.Paused += (s, e) => Dispatcher.Invoke(() =>
-            {
-                PlayPauseButton.Content = "Lecture";
-                PlayPauseButton.IsChecked = false;
-            });
-            _mediaPlayer.Stopped += (s, e) => Dispatcher.Invoke(() =>
-            {
-                PlayPauseButton.Content = "Lecture";
-                PlayPauseButton.IsChecked = false;
-                PositionSlider.Value = 0;
-                CurrentTimeText.Text = "00:00";
-                //                _uiTimer.Stop();
-            });
+            //_mediaPlayer.Paused += (s, e) => Dispatcher.Invoke(() =>
+            //{
+            //    btnPlayPause.Content = "Lecture";
+            //    btnPlayPause.IsChecked = false;
+            //});
+            //_mediaPlayer.Stopped += (s, e) => Dispatcher.Invoke(() =>
+            //{
+            //    btnPlayPause.Content = "Lecture";
+            //    btnPlayPause.IsChecked = false;
+            //    PositionSlider.Value = 0;
+            //    CurrentTimeText.Text = "00:00";
+            //    //                _uiTimer.Stop();
+            //});
         }
         #endregion init
 
@@ -248,9 +249,6 @@ namespace WpfMediaPlayerRA {
             VideoView.Dispose();
         }
 
-        private void PlayPauseButton_Checked(object sender, RoutedEventArgs e) {
-
-        }
 
         private void SpeedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (_mediaPlayer != null) {
@@ -260,14 +258,18 @@ namespace WpfMediaPlayerRA {
 
         }
         // Toggle Play/Pause
-        private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
+        private void btnPlayPause_Checked(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void btnPlayPause_Click(object sender, RoutedEventArgs e) {
             if (_mediaPlayer == null)
                 return;
 
             if (_mediaPlayer.IsPlaying) {
                 _mediaPlayer.Pause();
-                PlayPauseButton.Content = "Lecture";
-                PlayPauseButton.IsChecked = false;
+                btnPlayPause.Content = "Lecture";
+                btnPlayPause.IsChecked = false;
             }
             else {
                 // Si aucun média n'est chargé, on peut relire le dernier ou réouvrir
@@ -277,8 +279,8 @@ namespace WpfMediaPlayerRA {
                 else {
                     _mediaPlayer.Play();
                 }
-                PlayPauseButton.Content = "Pause";
-                PlayPauseButton.IsChecked = true;
+                btnPlayPause.Content = "Pause";
+                btnPlayPause.IsChecked = true;
             }
         }
         private void StartLimitSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
@@ -320,8 +322,8 @@ namespace WpfMediaPlayerRA {
         private async void OpenAndPlay(string filePath) {
             var media = new LibVLCSharp.Shared.Media(_libVLC, filePath, FromType.FromPath);
             _mediaPlayer.Play(media);
-            PlayPauseButton.Content = "Pause";
-            PlayPauseButton.IsChecked = true;
+            btnPlayPause.Content = "Pause";
+            btnPlayPause.IsChecked = true;
             sliderStartEnd.initSlider();
             timer_start();
         }

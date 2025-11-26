@@ -33,10 +33,10 @@
                 <!-- Ligne lecture/stop, vitesse -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8" >
                     <!-- Toggle Play/Pause -->
-                    <ToggleButton x:Name="PlayPauseButton"
+                    <ToggleButton x:Name="btnPlayPause"
                             Width="100" Height="32"
                             Content="Lecture"
-                            Click="PlayPauseButton_Click" Checked="PlayPauseButton_Checked"/>
+                            Click="btnPlayPause_Click" Checked="btnPlayPause_Checked"/>
 
                     <!-- Stop -->
                     <Button x:Name="StopButton"
