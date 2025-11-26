@@ -62,8 +62,17 @@ namespace WpfMediaPlayerRA {
 
         private void LoadVideoFiles(string folderPath) {
             if (Directory.Exists(folderPath)) {
-                var files = Directory.GetFiles(folderPath, "*.mkv");
-                foreach (var file in files) {
+
+                // Common video file extensions
+                string[] videoExtensions = { ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv" };
+
+                // Get all files and filter by extension
+                var videoFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly)
+                                          .Where(file => videoExtensions.Contains(Path.GetExtension(file).ToLower()))
+                                          .ToList();
+
+
+                foreach (var file in videoFiles) {
                     FilesListView.Items.Add(System.IO.Path.GetFileName(file));
                 }
             }
@@ -207,9 +216,18 @@ namespace WpfMediaPlayerRA {
             }
         }
 
-        private void OpenAndPlay(string path) {
-            var media = new Media(_libVLC, path, FromType.FromPath);
+        //private void OpenAndPlay(string path) {
+        //    var media = new Media(_libVLC, path, FromType.FromPath);
+        //    _mediaPlayer.Play(media);
+        //    TotalTimeText.Text = FormatTime(_mediaPlayer.Length);
+        //}
+        private void OpenAndPlay(string filePath) {
+            var media = new Media(_libVLC, filePath, FromType.FromPath);
+            TotalTimeText.Text = FormatTime(_mediaPlayer.Length);
             _mediaPlayer.Play(media);
+            PlayPauseButton.Content = "Pause";
+            PlayPauseButton.IsChecked = true;
+            _uiTimer.Start();
         }
 
         private void UiTimer_Tick(object sender, EventArgs e) {
@@ -282,17 +300,11 @@ namespace WpfMediaPlayerRA {
             if (FilesListView.SelectedItem != null) {
                 string selectedFile = FilesListView.SelectedItem.ToString();
                 _mediaPath = Path.Combine(@"Q:\zulu\Release\demo", selectedFile);
-                PlayVideo(_mediaPath);
+                OpenAndPlay(_mediaPath);
             }
         }
 
-        private void PlayVideo(string filePath) {
-            var media = new Media(_libVLC, filePath, FromType.FromPath);
-            _mediaPlayer.Play(media);
-            PlayPauseButton.Content = "Pause";
-            PlayPauseButton.IsChecked = true;
-            _uiTimer.Start();
-        }
+
 
     }
 }

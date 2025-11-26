@@ -65,12 +65,12 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
                     <TextBlock x:Name="CurrentTimeText" Text="00:00" Foreground="White" Width="60" TextAlignment="Right"/>
                     <Slider x:Name="PositionSlider"
-                      Minimum="0" Maximum="100"
-                      ValueChanged="PositionSlider_ValueChanged"
-                      IsMoveToPointEnabled="True"
-                                           PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown"
-                PreviewMouseLeftButtonUp="Slider_PreviewMouseLeftButtonUp"
- Width="200"
+                        Minimum="0" Maximum="100"
+                        ValueChanged="PositionSlider_ValueChanged"
+                        IsMoveToPointEnabled="True"
+                        PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown"
+                        PreviewMouseLeftButtonUp="Slider_PreviewMouseLeftButtonUp"
+                        Width="480"
                       >
                         <!-- Gestion du drag pour éviter les conflits avec la mise à jour du timer -->
                         <Slider.Template>
@@ -89,7 +89,7 @@
                     </Slider>
                     <TextBlock x:Name="TotalTimeText" Text="00:00" Foreground="White" Width="60"/>
                 </StackPanel>
-                
+
 
 
             </StackPanel>
