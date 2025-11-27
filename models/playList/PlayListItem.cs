@@ -1,17 +1,17 @@
 ﻿using System.ComponentModel;
 using System.IO;
+using WpfMediaPlayerRA.UtilWpf;
 namespace Models {
     public class PlayListItem : INotifyPropertyChanged {
         private string _icon, _name, _fullName;
-        private float _debut, _fin;
+        private SliderStartEnd sliderStartEnd;
 
         public PlayListItem() { }
-        public PlayListItem(string icon, string name, string fullname, float debut = 0, float fin = 1) {
+        public PlayListItem(string icon, string name, string fullname, SliderStartEnd sliderStartEnd) {
             Icon = icon;
             Name = name;
             FullName = fullname;
-            Debut = debut;
-            Fin = fin;
+            SliderStartEnd = sliderStartEnd;
         }
         public string Icon {
             get { return _icon; }
@@ -41,8 +41,9 @@ namespace Models {
             }
         }
 
-        public float Debut { get => _debut; set => _debut = value; }
-        public float Fin { get => _fin; set => _fin = value; }
+        public float Debut { get => sliderStartEnd.StartLimit; set => sliderStartEnd.StartLimit = value; }
+        public float Fin { get => sliderStartEnd.EndLimit; set => sliderStartEnd.EndLimit = value; }
+        public SliderStartEnd SliderStartEnd { get => sliderStartEnd; set => sliderStartEnd = value; }
 
         private string setFichierLocal(string path) {
             string randomName = Path.GetRandomFileName();

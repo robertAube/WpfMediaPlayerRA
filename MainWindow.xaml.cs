@@ -39,6 +39,7 @@ namespace WpfMediaPlayerRA {
 
         // Chemin d'exemple : remplace par ta vidéo
         private static string MEDIA_PATH = @"Q:\zulu\Release\demo";
+        private PlayListItem? selectedPlayListItem;
         private string _mediaPath;
         private SliderStartEnd sliderStartEnd;
         private readonly double TIMER_SPEED = 100;
@@ -67,8 +68,8 @@ namespace WpfMediaPlayerRA {
         }
 
         private void initListView() {
-            playListLV = new PlayListLV(FilesListView, MEDIA_PATH); // Charge les fichiers dans la ListView
-            sliderStartEnd = new SliderStartEnd(StartLimitSlider, EndLimitSlider);
+            playListLV = new PlayListLV(FilesListView, MEDIA_PATH, StartLimitSlider, EndLimitSlider); // Charge les fichiers dans la ListView
+//            sliderStartEnd = new SliderStartEnd(StartLimitSlider, EndLimitSlider);
         }
 
         private void initMediaPlayer() {
@@ -278,11 +279,25 @@ namespace WpfMediaPlayerRA {
 
         private void FilesListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
             if (FilesListView.SelectedItem != null) {
-                var selectedPlayListItem = FilesListView.SelectedItem as PlayListItem;
+                //if (selectedPlayListItem != null) {
+                //    selectedPlayListItem.Debut = sliderStartEnd.StartLimit;
+                //    selectedPlayListItem.Fin = sliderStartEnd.EndLimit;
+                //}
+                selectedPlayListItem = FilesListView.SelectedItem as PlayListItem;
+                sliderStartEnd = selectedPlayListItem.SliderStartEnd;
+                selectedPlayListItem.SliderStartEnd.reloadSlider();
+//                setLimitStartEnd();
+
                 _mediaPath = selectedPlayListItem.FullName;
                 OpenAndPlay(_mediaPath);
             }
         }
+
+        private void setLimitStartEnd() {
+            sliderStartEnd.StartLimit = selectedPlayListItem.Debut;
+            sliderStartEnd.EndLimit = selectedPlayListItem.Fin;
+        }
+
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             // fermer les fichier temporaire local
             playListLV.deleteTempFile();
@@ -299,7 +314,6 @@ namespace WpfMediaPlayerRA {
             _mediaPlayer.Play(media);
             btnPlayPause.Content = "Pause";
             btnPlayPause.IsChecked = true;
-            sliderStartEnd.initSlider();
             timer_start();
         }
 

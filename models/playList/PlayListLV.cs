@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using DocumentFormat.OpenXml.Packaging;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,13 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using WpfMediaPlayerRA.UtilWpf;
 
 namespace WpfMediaPlayerRA.models.playList {
     class PlayListLV {
         private ListView listView;
+        Slider sliderStart, sliderEnd;
 
-        public PlayListLV(ListView listView, string path) {
+        public PlayListLV(ListView listView, string path, Slider sliderStart, Slider sliderEnd) {
             this.listView = listView;
+            this.sliderStart = sliderStart;
+            this.sliderEnd = sliderEnd;
+
             LoadVideoFiles(path);
         }
 
@@ -40,8 +46,8 @@ namespace WpfMediaPlayerRA.models.playList {
 
 
                 foreach (var fullPath in videoFiles) {
-                    var playListItem = new PlayListItem("", Path.GetFileNameWithoutExtension(fullPath), fullPath);
-                    listView.Items.Add(playListItem); 
+                    var playListItem = new PlayListItem("", Path.GetFileNameWithoutExtension(fullPath), fullPath, new SliderStartEnd(sliderStart, sliderEnd));
+                    listView.Items.Add(playListItem);
                 }
             }
         }

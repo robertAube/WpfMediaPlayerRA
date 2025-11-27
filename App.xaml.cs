@@ -65,8 +65,5 @@ namespace WpfMediaPlayerRA
                 }
             }
         }
-
-
     }
-
 }

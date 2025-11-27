@@ -5,39 +5,51 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace WpfMediaPlayerRA.UtilWpf
-{
-    class SliderStartEnd
-    {
+namespace WpfMediaPlayerRA.UtilWpf {
+    public class SliderStartEnd {
         private float oldStartLimit, oldEndLimit;
-        private Slider startSlider, endSlider;
+        private Slider sliderStartLimit, sliderEndLimit;
         private readonly float MAX_END_LIMIT = 1;
         private readonly float NEAR_GAP_LIMIT = (float)0.02;
+        public Slider SliderStartLimit {
+            set {
+                sliderStartLimit = value;
+            }
+        }
+        public Slider SliderEndLimit {
+            set {
+                sliderEndLimit = value;
+            }
+        }
 
         public float StartLimit {
             set {
-                startSlider.Value = value; 
+                sliderStartLimit.Value = value;
             }
-                    
-            get { return (float)startSlider.Value; }
+            get { return (float)sliderStartLimit.Value; }
         }
         public float EndLimit {
             set {
-                endSlider.Value = value; 
+                sliderEndLimit.Value = value;
             }
-            get { return (float)endSlider.Value; }
+            get { return (float)sliderEndLimit.Value; }
         }
 
         public SliderStartEnd(Slider startSlider, Slider endSlider) {
-            this.startSlider = startSlider;
-            this.endSlider = endSlider;
+            SliderStartLimit = startSlider;
+            SliderEndLimit = endSlider;
             initSlider();
         }
 
-        public void initSlider() {
+        private void initSlider() {
             StartLimit = 0;
             EndLimit = MAX_END_LIMIT;
             savePosition();
+        }
+
+        public void reloadSlider() {
+            StartLimit = oldStartLimit;
+            EndLimit = oldEndLimit;
         }
 
         private void savePosition() {
@@ -82,7 +94,7 @@ namespace WpfMediaPlayerRA.UtilWpf
         }
 
 
-        internal bool haveToChangeMediaPosition(float mediaPosition) { 
+        internal bool haveToChangeMediaPosition(float mediaPosition) {
             return startLimite_depasse_mediaPosition(mediaPosition) ||
                 mediaPosition_reachedLimitDroite(mediaPosition)
                 ;
@@ -97,7 +109,7 @@ namespace WpfMediaPlayerRA.UtilWpf
         internal float getNewPosition(float mediaPosition) {
             float newPosition = 0;
 
-            if (startLimite_depasse_mediaPosition(mediaPosition) ) {
+            if (startLimite_depasse_mediaPosition(mediaPosition)) {
                 newPosition = StartLimit;
             }
             if (mediaPosition_reachedLimitDroite(mediaPosition)) {
