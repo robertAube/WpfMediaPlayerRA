@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using WpfMakeBack.Utilitaires;
+using WpfMediaPlayerRA.models.playList;
 using WpfMediaPlayerRA.myutil;
 using WpfMediaPlayerRA.UtilWpf;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
@@ -41,8 +42,8 @@ namespace WpfMediaPlayerRA {
         private SliderStartEnd sliderStartEnd;
         private readonly double TIMER_SPEED = 100;
 
-        private List<PlayListItem> playListItems;
-
+        private PlayList playList;
+        
         public MainWindow() {
             InitializeComponent();
             AppConfig = new AppConfig();
@@ -58,7 +59,7 @@ namespace WpfMediaPlayerRA {
         }
 
         private void initListView() {
-            LoadVideoFiles(@"Q:\zulu\Release\demo"); // Charge les fichiers dans la ListView
+            playList = new PlayList(FilesListView, @"Q:\zulu\Release\demo"); // Charge les fichiers dans la ListView
             sliderStartEnd = new SliderStartEnd(StartLimitSlider, EndLimitSlider);
         }
 
@@ -94,23 +95,7 @@ namespace WpfMediaPlayerRA {
 
         #endregion init
 
-        private void LoadVideoFiles(string folderPath) {
-            if (Directory.Exists(folderPath)) {
 
-                // Common video file extensions
-                string[] videoExtensions = { ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv" };
-
-                // Get all files and filter by extension
-                var videoFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly)
-                                          .Where(file => videoExtensions.Contains(Path.GetExtension(file).ToLower()))
-                                          .ToList();
-
-
-                foreach (var file in videoFiles) {
-                    FilesListView.Items.Add(System.IO.Path.GetFileName(file));
-                }
-            }
-        }
 
 
         private void Example2_Unloaded(object sender, RoutedEventArgs e) {
