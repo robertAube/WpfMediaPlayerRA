@@ -5,7 +5,7 @@ namespace Models
 {
     public class PlayListContainer : INotifyPropertyChanged
     {
-        private ObservableCollection<PlayListItem> _playListData = new ObservableCollection<PlayListItem>();
+        private ObservableCollection<PlayListItemOld> _playListData = new ObservableCollection<PlayListItemOld>();
         public PlayListContainer()
         {
             //For UI testing purpose: 
@@ -13,12 +13,12 @@ namespace Models
             //_playListData.Add(new PlayList("Icons/Music.ico", "test.mp3", "C:\\Musics\\test.mp3"));
             //_playListData.Add(new PlayList("Icons/Video.ico", "test.mp4", "C:\\Musics\\test.mp4"));
         }
-        public PlayListContainer(ObservableCollection<PlayListItem> playListData)
+        public PlayListContainer(ObservableCollection<PlayListItemOld> playListData)
         {
             this._playListData = playListData;
         }
 
-        public ObservableCollection<PlayListItem> PlayListData
+        public ObservableCollection<PlayListItemOld> PlayListData
         {
             get { return _playListData; }
             set

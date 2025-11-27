@@ -6,10 +6,12 @@ namespace Models {
         private float _debut, _fin;
 
         public PlayListItem() { }
-        public PlayListItem(string icon, string name, string fullname) {
+        public PlayListItem(string icon, string name, string fullname, float debut = 0, float fin = 1) {
             this._icon = icon;
             this._name = name;
             this._fullName = fullname;
+            this._debut = debut;
+            this._fin = fin;
             //            this._fullName = "";
         }
         public string Icon {
@@ -56,6 +58,9 @@ namespace Models {
 
             return destinationFullPath;
         }
+
+        public string toString() { return _name; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName) {
             if (PropertyChanged != null) {

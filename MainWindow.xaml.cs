@@ -41,26 +41,16 @@ namespace WpfMediaPlayerRA {
         private SliderStartEnd sliderStartEnd;
         private readonly double TIMER_SPEED = 100;
 
+        private List<PlayListItem> playListItems;
+
         public MainWindow() {
             InitializeComponent();
-            //var label = new Label
-            //{
-            //    Content = "TEST",
-            //    HorizontalAlignment = HorizontalAlignment.Right,
-            //    VerticalAlignment = VerticalAlignment.Bottom,
-            //    Foreground = new SolidColorBrush(Colors.Red)
-            //};
-            //test.Children.Add(label);
-
             AppConfig = new AppConfig();
-
-        //    togglePausePlay = new BoutonToggle(btnPlayPause, "pause", "play");
 
             init();
         }
         #region init
         private void init() {
-
             initListView();
             timer_init();
             initMediaPlayer();

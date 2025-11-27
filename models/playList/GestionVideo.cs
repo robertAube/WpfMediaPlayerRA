@@ -45,7 +45,7 @@ namespace Models {
         private void ajouterVideosDansListe() {
             foreach (VideoInfo videoInfo in videoInfos) {
                 FileInfo fi = new FileInfo(videoInfo.VideoFullPath);
-                PlayListItem newList = new PlayListItem
+                PlayListItemOld newList = new PlayListItemOld
                 {
                     Name = videoInfo.VideoName,
                     FullName = videoInfo.VideoFullPath
