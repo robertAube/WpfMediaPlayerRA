@@ -50,8 +50,8 @@ namespace Models {
             string destinationFullPath;
 
             //Path.GetTempPath() donne le dossier temporaire du système (ex. C:\Users\robert.aube\AppData\Local\Temp)
-     //       do { //s'Assurer de créer un nom de fichier inexistant
-                destinationFullPath = Path.Combine(Path.GetTempPath(), randomName + Path.GetExtension(path));
+            //       do { //s'Assurer de créer un nom de fichier inexistant
+            destinationFullPath = Path.Combine(Path.GetTempPath(), randomName); // + Path.GetExtension(path));
        //     } while (!File.Exists(destinationFullPath));
             byte[] mediaData = File.ReadAllBytes(path);
             File.WriteAllBytes(destinationFullPath, mediaData);
