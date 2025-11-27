@@ -38,11 +38,12 @@ namespace WpfMediaPlayerRA {
         internal static AppConfig AppConfig { get; private set; }
 
         // Chemin d'exemple : remplace par ta vidéo
-        private string _mediaPath = @"Q:\zulu\Release\demo\Q1.mkv";
+        private static string MEDIA_PATH = @"Q:\zulu\Release\demo";
+        private string _mediaPath;
         private SliderStartEnd sliderStartEnd;
         private readonly double TIMER_SPEED = 100;
 
-        private PlayList playList;
+        private PlayListLV playList;
         
         public MainWindow() {
             InitializeComponent();
@@ -56,10 +57,13 @@ namespace WpfMediaPlayerRA {
             timer_init();
             initMediaPlayer();
             initButton();
+            // this.OnClosed += MainWindow_Closing;
         }
 
+
+
         private void initListView() {
-            playList = new PlayList(FilesListView, @"Q:\zulu\Release\demo"); // Charge les fichiers dans la ListView
+            playList = new PlayListLV(FilesListView, MEDIA_PATH); // Charge les fichiers dans la ListView
             sliderStartEnd = new SliderStartEnd(StartLimitSlider, EndLimitSlider);
         }
 
@@ -297,10 +301,14 @@ namespace WpfMediaPlayerRA {
 
         private void FilesListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
             if (FilesListView.SelectedItem != null) {
-                string selectedFile = FilesListView.SelectedItem.ToString();
-                _mediaPath = Path.Combine(@"Q:\zulu\Release\demo", selectedFile);
+                var selectedPlayListItem = FilesListView.SelectedItem as PlayListItem;
+                _mediaPath = selectedPlayListItem.FullName;
                 OpenAndPlay(_mediaPath);
             }
+        }
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            // fermer les fichier temporaire local
+            playList.deleteTempFile();
         }
         #endregion main events
 

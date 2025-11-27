@@ -7,16 +7,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace WpfMediaPlayerRA.models.playList
-{
-    class PlayList
-    {
+namespace WpfMediaPlayerRA.models.playList {
+    class PlayListLV {
         private ListView listView;
-        private List<PlayListItem> playListItems;
 
-        public PlayList(ListView listView, string path) {
+        public PlayListLV(ListView listView, string path) {
             this.listView = listView;
             LoadVideoFiles(path);
+        }
+
+        internal void deleteTempFile() {
+            foreach (var item in listView.Items) {
+                var playListItem = listView.SelectedItem as PlayListItem;
+                if (playListItem != null) {
+                    if (File.Exists(playListItem.FullName)) {
+                        File.Delete(playListItem.FullName);
+                    }
+                }
+            }
         }
 
         private void LoadVideoFiles(string folderPath) {
@@ -31,8 +39,9 @@ namespace WpfMediaPlayerRA.models.playList
                                           .ToList();
 
 
-                foreach (var file in videoFiles) {
-                    listView.Items.Add(Path.GetFileName(file));
+                foreach (var fullPath in videoFiles) {
+                    var playListItem = new PlayListItem("", Path.GetFileNameWithoutExtension(fullPath), fullPath);
+                    listView.Items.Add(playListItem); 
                 }
             }
         }

@@ -7,12 +7,11 @@ namespace Models {
 
         public PlayListItem() { }
         public PlayListItem(string icon, string name, string fullname, float debut = 0, float fin = 1) {
-            this._icon = icon;
-            this._name = name;
-            this._fullName = fullname;
-            this._debut = debut;
-            this._fin = fin;
-            //            this._fullName = "";
+            Icon = icon;
+            Name = name;
+            FullName = fullname;
+            Debut = debut;
+            Fin = fin;
         }
         public string Icon {
             get { return _icon; }
@@ -49,10 +48,10 @@ namespace Models {
             string randomName = Path.GetRandomFileName();
             string destinationFullPath;
 
-            //Path.GetTempPath() donne le dossier temporaire du système (ex. C:\Users\Nom\AppData\Local\Temp)
-            do { //s'Assurer de créer un nom de fichier inexistant
+            //Path.GetTempPath() donne le dossier temporaire du système (ex. C:\Users\robert.aube\AppData\Local\Temp)
+     //       do { //s'Assurer de créer un nom de fichier inexistant
                 destinationFullPath = Path.Combine(Path.GetTempPath(), randomName + Path.GetExtension(path));
-            } while (!File.Exists(destinationFullPath));
+       //     } while (!File.Exists(destinationFullPath));
             byte[] mediaData = File.ReadAllBytes(path);
             File.WriteAllBytes(destinationFullPath, mediaData);
 
