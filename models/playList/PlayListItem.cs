@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
 using System.IO;
 namespace Models {
-    public class PlayList : INotifyPropertyChanged {
+    public class PlayListItem : INotifyPropertyChanged {
         private string _icon, _name, _fullName;
 
-        public PlayList() { }
-        public PlayList(string icon, string name, string fullname) {
+        public PlayListItem() { }
+        public PlayListItem(string icon, string name, string fullname) {
             this._icon = icon;
             this._name = name;
             this._fullName = fullname;
