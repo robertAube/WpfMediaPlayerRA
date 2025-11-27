@@ -178,14 +178,6 @@ namespace WpfMediaPlayerRA {
         }
 
 
-        //void PlayButton_Click(object sender, RoutedEventArgs e) {
-        //    if (!VideoView.MediaPlayer.IsPlaying) {
-        //        using (var media = new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")))
-        //            VideoView.MediaPlayer.Play(media);
-        //        //VideoView.Height = SPAutre.Height;
-        //        //VideoView.Width = SPAutre.Width;
-        //    }
-        //}
 
         protected override void OnClosed(EventArgs e) {
             VideoView.Dispose();
@@ -204,20 +196,6 @@ namespace WpfMediaPlayerRA {
 
         }
         private void initButton() {
-            // Événements media utiles
-            //_mediaPlayer.Paused += (s, e) => Dispatcher.Invoke(() =>
-            //{
-            //    btnPlayPause.Content = "Lecture";
-            //    btnPlayPause.IsChecked = false;
-            //});
-            //_mediaPlayer.Stopped += (s, e) => Dispatcher.Invoke(() =>
-            //{
-            //    btnPlayPause.Content = "Lecture";
-            //    btnPlayPause.IsChecked = false;
-            //    PositionSlider.Value = 0;
-            //    CurrentTimeText.Text = "00:00";
-            //    //                _uiTimer.Stop();
-            //});
             btnPlayPauseSetPlay();
         }
 
@@ -256,13 +234,13 @@ namespace WpfMediaPlayerRA {
             }
         }
         private void StartLimitSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            //_startLimit = (float)(e.NewValue / 100);
-            //StartLimitText.Text = $"{e.NewValue:F0}%";
+            var startLimit = (float)(e.NewValue * 100);
+            StartLimitText.Text = $"{startLimit:F0}%";
         }
 
         private void EndLimitSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            //_endLimit = (float)(e.NewValue / 100);
-            //EndLimitText.Text = $"{e.NewValue:F0}%";
+            var endLimit = (float)(e.NewValue * 100);
+            EndLimitText.Text = $"{endLimit:F0}%";
         }
 
         // Ajuster la position si l'utilisateur clique sans drag (ValueChanged)
@@ -319,3 +297,11 @@ namespace WpfMediaPlayerRA {
 
     }
 }
+//void PlayButton_Click(object sender, RoutedEventArgs e) {
+//    if (!VideoView.MediaPlayer.IsPlaying) {
+//        using (var media = new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")))
+//            VideoView.MediaPlayer.Play(media);
+//        //VideoView.Height = SPAutre.Height;
+//        //VideoView.Width = SPAutre.Width;
+//    }
+//}
