@@ -101,22 +101,7 @@ namespace WpfMediaPlayerRA {
 
         }
 
-        private void initButton() {
-            // Événements media utiles
-            //_mediaPlayer.Paused += (s, e) => Dispatcher.Invoke(() =>
-            //{
-            //    btnPlayPause.Content = "Lecture";
-            //    btnPlayPause.IsChecked = false;
-            //});
-            //_mediaPlayer.Stopped += (s, e) => Dispatcher.Invoke(() =>
-            //{
-            //    btnPlayPause.Content = "Lecture";
-            //    btnPlayPause.IsChecked = false;
-            //    PositionSlider.Value = 0;
-            //    CurrentTimeText.Text = "00:00";
-            //    //                _uiTimer.Stop();
-            //});
-        }
+
         #endregion init
 
         private void LoadVideoFiles(string folderPath) {
@@ -261,26 +246,56 @@ namespace WpfMediaPlayerRA {
         private void btnPlayPause_Checked(object sender, RoutedEventArgs e) {
 
         }
+        private void initButton() {
+            // Événements media utiles
+            //_mediaPlayer.Paused += (s, e) => Dispatcher.Invoke(() =>
+            //{
+            //    btnPlayPause.Content = "Lecture";
+            //    btnPlayPause.IsChecked = false;
+            //});
+            //_mediaPlayer.Stopped += (s, e) => Dispatcher.Invoke(() =>
+            //{
+            //    btnPlayPause.Content = "Lecture";
+            //    btnPlayPause.IsChecked = false;
+            //    PositionSlider.Value = 0;
+            //    CurrentTimeText.Text = "00:00";
+            //    //                _uiTimer.Stop();
+            //});
+            btnPlayPauseSetPlay();
+        }
 
-        private void btnPlayPause_Click(object sender, RoutedEventArgs e) {
-            if (_mediaPlayer == null)
-                return;
-
-            if (_mediaPlayer.IsPlaying) {
+        private void btnPlayPauseSetPlay() {
+            btnPlayPause.IsChecked = true;
+            if (_mediaPlayer.Media == null) {
+//                OpenAndPlay(_mediaPath);
+            }
+            else {
+                _mediaPlayer.Play();
+                btnPlayPause.Content = "Pause";
+                btnPlayPause.IsChecked = true;
+            }
+        }
+        private void btnPlayPauseSetPause() {
+            btnPlayPause.IsChecked = true;
+            if (_mediaPlayer.Media == null) {
+                //                OpenAndPlay(_mediaPath);
+            }
+            else {
                 _mediaPlayer.Pause();
                 btnPlayPause.Content = "Lecture";
                 btnPlayPause.IsChecked = false;
             }
+        }
+
+        private void btnPlayPause_Click(object sender, RoutedEventArgs e) {
+            if (_mediaPlayer == null)
+                return;
+    //        btnPlayPause.IsChecked = !btnPlayPause.IsChecked;
+            if (btnPlayPause.IsChecked == true) {
+                btnPlayPauseSetPlay();
+            }
             else {
-                // Si aucun média n'est chargé, on peut relire le dernier ou réouvrir
-                if (_mediaPlayer.Media == null) {
-                    OpenAndPlay(_mediaPath);
-                }
-                else {
-                    _mediaPlayer.Play();
-                }
-                btnPlayPause.Content = "Pause";
-                btnPlayPause.IsChecked = true;
+                btnPlayPauseSetPause();
             }
         }
         private void StartLimitSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
