@@ -43,7 +43,7 @@ namespace WpfMediaPlayerRA {
         private SliderStartEnd sliderStartEnd;
         private readonly double TIMER_SPEED = 100;
 
-        private PlayListLV playList;
+        private PlayListLV playListLV;
         
         public MainWindow() {
             InitializeComponent();
@@ -57,13 +57,17 @@ namespace WpfMediaPlayerRA {
             timer_init();
             initMediaPlayer();
             initButton();
-            // this.OnClosed += MainWindow_Closing;
+            initFermeture();
         }
 
-
+        private void initFermeture() { //pour supprimer les fichiers à la fin
+            var app = (App)Application.Current;
+            app.listViewG.listView = FilesListView;
+            app.listViewG._mediaPlayer = _mediaPlayer;
+        }
 
         private void initListView() {
-            playList = new PlayListLV(FilesListView, MEDIA_PATH); // Charge les fichiers dans la ListView
+            playListLV = new PlayListLV(FilesListView, MEDIA_PATH); // Charge les fichiers dans la ListView
             sliderStartEnd = new SliderStartEnd(StartLimitSlider, EndLimitSlider);
         }
 
@@ -75,38 +79,13 @@ namespace WpfMediaPlayerRA {
 
             // we need the VideoView to be fully loaded before setting a MediaPlayer on it.
             VideoView.Loaded += (sender, e) => VideoView.MediaPlayer = _mediaPlayer;
-            //            Unloaded += Example2_Unloaded;
-            //_mediaPlayer.Opening += (s, e) => Dispatcher.Invoke(() => PlayPauseButton.IsChecked = true);
-            //_mediaPlayer.Playing += (s, e) =>
-            //{
-            //    Dispatcher.Invoke(() =>
-            //    {
-            //        PlayPauseButton.Content = "Pause";
-            //        PlayPauseButton.IsChecked = true;
-            //        UpdateTotalTimeLabel();
-            //        _uiTimer.Start();
-            //    });
-            //};
-
-
-
             // Abonner aux événements
             _mediaPlayer.EndReached += MediaPlayer_EndReached;
             //            _mediaPlayer.EncounteredError += MediaPlayer_EncounteredError;
 
         }
-
-
         #endregion init
 
-
-
-
-        private void Example2_Unloaded(object sender, RoutedEventArgs e) {
-            _mediaPlayer.Stop();
-            _mediaPlayer.Dispose();
-            //          _libVLC.Dispose();
-        }
         #region timer
         private void timer_init() {
             // Timer UI : met à jour le slider de position et les textes
@@ -118,13 +97,11 @@ namespace WpfMediaPlayerRA {
         }
 
         private void timer_start() {
-
             _timerUI.Start();
             // TODO Certains conteneurs mal muxés (MKV sans cues, MP3 VBR sans index, AVI incomplet) peuvent ne pas exposer une durée fiable.
         }
 
         private void timer_event(object sender, EventArgs e) {
-
             if (_mediaPlayer == null || _isSeekingByUser)
                 return;
 
@@ -308,7 +285,7 @@ namespace WpfMediaPlayerRA {
         }
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             // fermer les fichier temporaire local
-            playList.deleteTempFile();
+            playListLV.deleteTempFile();
         }
         #endregion main events
 
