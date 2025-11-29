@@ -1,4 +1,4 @@
-﻿using MyUtil;
+using MyUtil;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +23,7 @@ namespace Models {
             List<string> listeNom = new List<string>();
 
             try {
-                listeNom = FichierExcel.lireColonneExcel(MainWindow.AppConfig.ExcelMediaListPath, 1, 1);
+                listeNom = FichierExcel.lireColonneExcel(AppConfig.ExcelMediaListPath, 1, 1);
                 listePath = FichierExcel.lireColonneExcel(MainWindow.AppConfig.ExcelMediaListPath, 1, 2);
             }
             catch (Exception ex) {

@@ -20,7 +20,7 @@ namespace MirzaMediaPlayer {
 
         public string ExcelMediaListPath {
             get => Util.ConvertToAbsolutePath(_excelMediaListPath);
-      //      set { _excelMediaListPath = value; OnPropertyChanged(); }
+            set { _excelMediaListPath = Util.ConvertToAbsolutePath(value); } // OnPropertyChanged(); }
         }
 
         public string DefaultVideoFullPath {
