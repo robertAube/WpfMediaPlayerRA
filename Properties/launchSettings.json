@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WpfMediaPlayerRA": {
+      "commandName": "Project",
+      "commandLineArgs": "\"Q:\\zulu\\Nouveau dossier\\A134ArgumentsTest.xlsm\""
+    }
+  }
+}

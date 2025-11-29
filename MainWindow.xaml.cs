@@ -53,11 +53,27 @@ namespace WpfMediaPlayerRA {
         }
         #region init
         private void init() {
+            gererArguments();
             initListView();
             timer_init();
             initMediaPlayer();
             initButton();
             initFermeture();
+        }
+
+        private void gererArguments() {
+            string[] args = Environment.GetCommandLineArgs();
+
+            traiterNomDeFichierExcel(args);
+        }
+
+        private void traiterNomDeFichierExcel(string[] args) {
+            string? fichierExcel = args.FirstOrDefault(a => a.EndsWith(".xlsm", StringComparison.OrdinalIgnoreCase));
+            if (fichierExcel != null) {
+                AppConfig.ExcelMediaListPath = fichierExcel;
+                AppConfig.VideoSource = AppConfig.SourceVideo.FromExcel;
+            }
+            //            bool safeMode = args.Any(a => a.Equals("--safe", StringComparison.OrdinalIgnoreCase));
         }
 
         private void initFermeture() { //pour supprimer les fichiers à la fin

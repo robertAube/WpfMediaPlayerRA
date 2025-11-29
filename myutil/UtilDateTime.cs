@@ -14,5 +14,7 @@ namespace WpfMediaPlayerRA.myutil
                 ? $"{ts.Hours:D2}:{ts.Minutes:D2}:{ts.Seconds:D2}"
                 : $"{ts.Minutes:D2}:{ts.Seconds:D2}";
         }
+
+
     }
 }

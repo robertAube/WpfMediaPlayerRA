@@ -28,5 +28,6 @@ namespace MyUtil {
             string combinedPath = Path.Combine(effectiveBasePath, inputPath);
             return Path.GetFullPath(combinedPath);
         }
+
     }
 }
