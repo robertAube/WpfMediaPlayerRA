@@ -1,4 +1,4 @@
-﻿using MirzaMediaPlayer.MyUtil;
+﻿using MyUtil;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,11 +23,11 @@ namespace Models {
             List<string> listeNom = new List<string>();
 
             try {
-                listeNom = FichierExcel.lireColonneExcel(MainWindow.AppConfig.excelMediaListPath, 1, 1);
-                listePath = FichierExcel.lireColonneExcel(MainWindow.AppConfig.excelMediaListPath, 1, 2);
+                listeNom = FichierExcel.lireColonneExcel(MainWindow.AppConfig.ExcelMediaListPath, 1, 1);
+                listePath = FichierExcel.lireColonneExcel(MainWindow.AppConfig.ExcelMediaListPath, 1, 2);
             }
             catch (Exception ex) {
-                videoInfos.Add(getVideo("erreur fichier excel", MainWindow.AppConfig.defaultVideoFullPath));
+                videoInfos.Add(getVideo("erreur fichier excel", MainWindow.AppConfig.DefaultVideoFullPath));
             }
             int i = 0;
             foreach (string nom in listeNom) {
@@ -62,7 +62,7 @@ namespace Models {
 
         private VideoInfo getVideo(string name, string filePath) {
             VideoInfo videoInfo;
-            string defFilePath = MainWindow.AppConfig.defaultVideoFullPath;
+            string defFilePath = MainWindow.AppConfig.DefaultVideoFullPath;
 
             if (File.Exists(filePath)) {
                 string[] videoExtensions = { ".mp4", ".avi", ".mkv", ".mov", ".wmv" };

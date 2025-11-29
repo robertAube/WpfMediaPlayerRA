@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MirzaMediaPlayer.MyUtil {
+namespace MyUtil {
     internal class Util {
         /// <summary>
         /// Convertit un chemin relatif en chemin absolu en utilisant un chemin de base si nécessaire.

@@ -1,4 +1,4 @@
-﻿using MirzaMediaPlayer.MyUtil;
+﻿using MyUtil;
 
 
 namespace Models {

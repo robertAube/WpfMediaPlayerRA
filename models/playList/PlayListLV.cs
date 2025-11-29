@@ -1,4 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
+using MirzaMediaPlayer;
+using MyUtil;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using WpfMediaPlayerRA.UtilWpf;
+using static MirzaMediaPlayer.AppConfig;
 
 namespace WpfMediaPlayerRA.models.playList {
     class PlayListLV {
@@ -19,7 +22,12 @@ namespace WpfMediaPlayerRA.models.playList {
             this.sliderStart = sliderStart;
             this.sliderEnd = sliderEnd;
 
-            LoadVideoFiles(path);
+            if (MainWindow.AppConfig.VideoSource == SourceVideo.FromExcel) {
+                chargerMediaFromExcel();
+            }
+            else {
+                chargerMediaFromDir(path);
+            }
         }
 
         internal void deleteTempFile() {
@@ -33,7 +41,31 @@ namespace WpfMediaPlayerRA.models.playList {
             }
         }
 
-        private void LoadVideoFiles(string folderPath) {
+        private void chargerMediaFromExcel() {
+            List<string> listePath = new List<string>();
+            List<string> listeNom = new List<string>();
+
+            try {
+                listeNom = FichierExcel.lireColonneExcel(MainWindow.AppConfig.ExcelMediaListPath, 1, 1);
+                listePath = FichierExcel.lireColonneExcel(MainWindow.AppConfig.ExcelMediaListPath, 1, 2);
+            }
+            catch (Exception ex) {
+                var playListItem = new PlayListItem("", "erreur fichier excel", MainWindow.AppConfig.DefaultVideoFullPath, new SliderStartEnd(sliderStart, sliderEnd));
+                listView.Items.Add(playListItem);
+            }
+            int i = 0;
+            foreach (string nom in listeNom) {
+                var playListItem = new PlayListItem("", nom, listePath[i++], new SliderStartEnd(sliderStart, sliderEnd));
+                listView.Items.Add(playListItem);
+            }
+
+            //videoInfos.Add(getVideo("question 1", @"..\..\!fichiers\butiner.mp4"));
+            //videoInfos.Add(getVideo("question 2", @"..\..\!fichiers\M30-1356.mp4"));
+            //videoInfos.Add(getVideo("formatif", @"..\..\!fichiers\DémoFormatif11.mkv"));
+        }
+
+
+        private void chargerMediaFromDir(string folderPath) {
             if (Directory.Exists(folderPath)) {
 
                 // Common video file extensions

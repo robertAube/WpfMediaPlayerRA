@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfMediaPlayerRA" 
         xmlns:uc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Département d'informatique; cégep Limoilou (V1.0)" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -30,13 +30,14 @@
         <Border Grid.Row="1" Padding="8" Margin="0,8,0,0" Background="#1a1a1a" CornerRadius="6">
             <StackPanel Orientation="Vertical" >
 
-                <!-- Ligne lecture/stop, vitesse -->
+                <!-- Ligne de boutons (lecture/stop), (vitesse) -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8" >
                     <!-- Toggle Play/Pause -->
                     <ToggleButton x:Name="btnPlayPause"
                             Width="100" Height="32"
                             Content="Lecture"
-                            Click="btnPlayPause_Click" Checked="btnPlayPause_Checked"/>
+                            Click="btnPlayPause_Click" Checked="btnPlayPause_Checked">
+                    </ToggleButton>
 
                     <!-- Stop -->
                     <Button x:Name="StopButton"

@@ -25,17 +25,17 @@ namespace WpfMediaPlayerRA {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        private static AppConfig appConfig = new AppConfig();
         LibVLC _libVLC;
         MediaPlayer _mediaPlayer;
         private DispatcherTimer _timerUI;
 
-        private BoutonToggle togglePausePlay;
-
         private bool _isSeekingByUser = false;
         private bool _endReached = false;
 
-
-        internal static AppConfig AppConfig { get; private set; }
+        public static AppConfig AppConfig {
+            get { return appConfig; }
+        }
 
         // Chemin d'exemple : remplace par ta vidéo
         private static string MEDIA_PATH = @"Q:\zulu\Release\demo";
@@ -45,10 +45,9 @@ namespace WpfMediaPlayerRA {
         private readonly double TIMER_SPEED = 100;
 
         private PlayListLV playListLV;
-        
+
         public MainWindow() {
             InitializeComponent();
-            AppConfig = new AppConfig();
 
             init();
         }
@@ -69,7 +68,7 @@ namespace WpfMediaPlayerRA {
 
         private void initListView() {
             playListLV = new PlayListLV(FilesListView, MEDIA_PATH, StartLimitSlider, EndLimitSlider); // Charge les fichiers dans la ListView
-//            sliderStartEnd = new SliderStartEnd(StartLimitSlider, EndLimitSlider);
+                                                                                                      //            sliderStartEnd = new SliderStartEnd(StartLimitSlider, EndLimitSlider);
         }
 
         private void initMediaPlayer() {
@@ -157,7 +156,7 @@ namespace WpfMediaPlayerRA {
                 _timerUI.Stop();
             }
         }
- 
+
         // Début du drag sur le slider de position
         private void PositionSlider_DragStarted(object sender, DragStartedEventArgs e) {
             _isSeekingByUser = true;
@@ -202,7 +201,7 @@ namespace WpfMediaPlayerRA {
         private void btnPlayPauseSetPlay() {
             btnPlayPause.IsChecked = true;
             if (_mediaPlayer.Media == null) {
-//                OpenAndPlay(_mediaPath);
+                //                OpenAndPlay(_mediaPath);
             }
             else {
                 _mediaPlayer.Play();
@@ -225,7 +224,7 @@ namespace WpfMediaPlayerRA {
         private void btnPlayPause_Click(object sender, RoutedEventArgs e) {
             if (_mediaPlayer == null)
                 return;
-    //        btnPlayPause.IsChecked = !btnPlayPause.IsChecked;
+            //        btnPlayPause.IsChecked = !btnPlayPause.IsChecked;
             if (btnPlayPause.IsChecked == true) {
                 btnPlayPauseSetPlay();
             }
@@ -264,7 +263,7 @@ namespace WpfMediaPlayerRA {
                 selectedPlayListItem = FilesListView.SelectedItem as PlayListItem;
                 sliderStartEnd = selectedPlayListItem.SliderStartEnd;
                 selectedPlayListItem.SliderStartEnd.reloadSlider();
-//                setLimitStartEnd();
+                //                setLimitStartEnd();
 
                 _mediaPath = selectedPlayListItem.FullName;
                 OpenAndPlay(_mediaPath);
