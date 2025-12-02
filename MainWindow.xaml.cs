@@ -1,19 +1,11 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Office2010.PowerPoint;
+﻿using DocumentFormat.OpenXml.Office2010.PowerPoint;
 using LibVLCSharp.Shared;
 using MirzaMediaPlayer;
 using Models;
-using System;
-using System.IO;
-using System.Threading;
-using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using WpfMakeBack.Utilitaires;
 using WpfMediaPlayerRA.models.playList;
 using WpfMediaPlayerRA.myutil;
 using WpfMediaPlayerRA.UtilWpf;
@@ -45,6 +37,7 @@ namespace WpfMediaPlayerRA {
         private readonly double TIMER_SPEED = 100;
 
         private PlayListLV playListLV;
+        private long _dureeMiliSeconde;
 
         public MainWindow() {
             InitializeComponent();
@@ -98,7 +91,6 @@ namespace WpfMediaPlayerRA {
             // Abonner aux événements
             _mediaPlayer.EndReached += MediaPlayer_EndReached;
             //            _mediaPlayer.EncounteredError += MediaPlayer_EncounteredError;
-
         }
         #endregion init
 
@@ -135,24 +127,13 @@ namespace WpfMediaPlayerRA {
                 _mediaPlayer.Position = sliderStartEnd.getNewPosition(_mediaPlayer.Position);
             }
 
-
             float pos = _mediaPlayer.Position; // 0..1
             PositionSlider.Value = pos;
-
-
 
             // Temps courant (ms)
             {
                 long currentMs = _mediaPlayer.Time;
                 CurrentTimeText.Text = UtilDateTime.FormatTime(currentMs);
-            }
-
-            // Temps longueur média
-            { //TODO Appellé toujours : on peut faire mieux?
-                long longeurMedia;
-                // Parse le média pour obtenir la durée
-                longeurMedia = _mediaPlayer.Length;
-                TotalTimeText.Text = UtilDateTime.FormatTime(_mediaPlayer.Length);
             }
         }
         #endregion timer
@@ -282,7 +263,7 @@ namespace WpfMediaPlayerRA {
                 //                setLimitStartEnd();
 
                 _mediaPath = selectedPlayListItem.FullName;
-                OpenAndPlay(_mediaPath);
+                OpenAndPlayAsync(_mediaPath);
             }
         }
 
@@ -302,15 +283,56 @@ namespace WpfMediaPlayerRA {
         //    _mediaPlayer.Play(media);
         //    TotalTimeText.Text = FormatTime(_mediaPlayer.Length);
         //}
-        private async void OpenAndPlay(string filePath) {
+        private async Task OpenAndPlayAsync(string filePath) {
             var media = new LibVLCSharp.Shared.Media(_libVLC, filePath, FromType.FromPath);
-            _mediaPlayer.Play(media);
+
             btnPlayPause.Content = "Pause";
             btnPlayPause.IsChecked = true;
             timer_start();
+
+            await media.Parse(MediaParseOptions.ParseLocal);
+
+            int retries = 20;
+            while (media.Duration == 0 && retries-- > 0) {
+                await Task.Delay(100);
+            }
+            _dureeMiliSeconde = media.Duration;
+            TotalTimeText.Text = UtilDateTime.FormatTime(_dureeMiliSeconde);
+
+
+            _mediaPlayer.Play(media);
+        }
+        private async Task mettreAJourDureeAsync(LibVLCSharp.Shared.Media media) {
+            // Parse le média pour obtenir la durée
+
+
         }
 
+        //private async Task mettreAJourDureeAsync(LibVLCSharp.Shared.Media media, System.Windows.Controls.TextBlock totalTimeText) {
+        //    // Parse le média pour obtenir la durée
+        //    media.ParsedChanged += (sender, args) =>
+        //    {
+        //        long longeurMedia;
+        //        if (media.Duration > 0) {
+
+        //        }
+        //    };
+        //    await media.Parse(MediaParseOptions.ParseLocal);
+        //    _dureeMiliSeconde = media.Duration;
+        //}
+        //private async Task mettreAJourDureeAsync(LibVLCSharp.Shared.Media media) {
+        //    // Parse le média pour obtenir la durée
+
+        //    media.Playing += (sender, args) =>
+        //    {
+        //        _dureeMiliSeconde = media.Duration;
+        //    }
+
+        //}
+
+
     }
+
 }
 //void PlayButton_Click(object sender, RoutedEventArgs e) {
 //    if (!VideoView.MediaPlayer.IsPlaying) {

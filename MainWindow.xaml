@@ -86,7 +86,7 @@
                             </ControlTemplate>
                         </Slider.Template>
                     </Slider>
-                    <TextBlock x:Name="TotalTimeText" Text="00:00" Foreground="White" Width="60"/>
+                    <TextBlock x:Name="TotalTimeText" Text="" Foreground="White" Width="60"/>
                 </StackPanel>
 
                 <!-- Sliders limites début et fin -->
