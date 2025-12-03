@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         WindowStyle="None" ResizeMode="NoResize"
         ShowInTaskbar="False" Topmost="True"
-        Width="300" Height="225" Background="White"
+        Width="294" Height="183" Background="White"
         AllowsTransparency="False">
     <Grid>
-        <Image Source="/icon/player_play_vert(128).png" Width="128" Height="128" RenderTransformOrigin="0.5,0.5" Margin="90,78,90,27">
+        <Image Source="/icon/player_play_vert(128).png" Width="128" Height="128" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Bottom">
             <Image.RenderTransform>
                 <ScaleTransform x:Name="scaleTransform" ScaleX="1" ScaleY="1"/>
             </Image.RenderTransform>
@@ -27,8 +27,9 @@
             </Image.Triggers>
         </Image>
 
-        <TextBlock Text="Chargement..." FontSize="28" Foreground="#444"
-                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,15,0,0"/>
+        <TextBlock Text=" V1.1 " FontSize="8" Foreground="Black" Margin="0,0,0,25"/>
+        <TextBlock x:Name="txtChargement"  Text="Chargement" FontSize="28" Foreground="#444"
+                   VerticalAlignment="Top" Margin="63,15,0,0"/>
     </Grid>
 </Window>
 
