@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.IO;
+using WpfMediaPlayerRA;
 using WpfMediaPlayerRA.UtilWpf;
 namespace Models {
     public class PlayListItem : INotifyPropertyChanged {
@@ -51,7 +52,7 @@ namespace Models {
 
             //Path.GetTempPath() donne le dossier temporaire du système (ex. C:\Users\robert.aube\AppData\Local\Temp)
             //       do { //s'Assurer de créer un nom de fichier inexistant
-            destinationFullPath = Path.Combine(Path.GetTempPath(), randomName); // + Path.GetExtension(path));
+            destinationFullPath = Path.Combine(MainWindow.AppConfig.RepTempLocal, randomName); // + Path.GetExtension(path));
        //     } while (!File.Exists(destinationFullPath));
             byte[] mediaData = File.ReadAllBytes(path);
             File.WriteAllBytes(destinationFullPath, mediaData);
