@@ -1,0 +1,7 @@
+﻿L'application est dans "Q:\un peu de tout\lecteurCL_V1\WpfMediaPlayerRA.exe"
+L'application peut être copiée vers un autre emplacement.
+IMPORTANT: ne pas utiliser directement l'application, mais plutôt mettre à la disposition des étudiants un raccourci vers l'application.
+Le fichier Excel HardCodé (par défaut) est "Q:\zulu\Nouveau dossier\A134V3.xlsm". Il précise les fichiers à loader au départ. Ceux-ci sont dans la première feuille. Elle doit respecter la structure actuelle.
+Le fichier Excel doit être fermé avant l'ouverture de l'application.
+En paramètre de l'application, on peut spécifier un fichier excel qui sera utilisé à la place du fichier Excel HardCodé (par défaut). Exemple :  WpfMediaPlayerRA.exe "Q:\zulu\Nouveau dossier\A134V3 groupe3.xlsm"
+ 

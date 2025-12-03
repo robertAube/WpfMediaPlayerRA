@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="!fichiers\remove-tool.mp4" />
     <None Remove="icon\player_play_vert%28128%29.png" />
     <None Remove="icon\player_rewind%2812%29.png" />
   </ItemGroup>
@@ -26,6 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="!fichiers\remove-tool.mp4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CustomToolNamespace></CustomToolNamespace>
+    </Resource>
     <Resource Include="icon\player_play_vert(128).png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

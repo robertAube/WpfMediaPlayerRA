@@ -49,12 +49,24 @@ namespace Models {
         private string setFichierLocal(string path) {
             string randomName = Path.GetRandomFileName();
             string destinationFullPath;
+            byte[] mediaData;
 
             //Path.GetTempPath() donne le dossier temporaire du système (ex. C:\Users\robert.aube\AppData\Local\Temp)
             //       do { //s'Assurer de créer un nom de fichier inexistant
             destinationFullPath = Path.Combine(MainWindow.AppConfig.RepTempLocal, randomName); // + Path.GetExtension(path));
-       //     } while (!File.Exists(destinationFullPath));
-            byte[] mediaData = File.ReadAllBytes(path);
+                                                                                               //     } while (!File.Exists(destinationFullPath));
+
+            //tester si fichier origine absent
+            //path = "kdsl;fks;lkf;alk";
+
+            if (File.Exists(path)) {
+                mediaData =  File.ReadAllBytes(path);
+            }
+            else {
+                mediaData = File.ReadAllBytes(MainWindow.AppConfig.DefaultVideoFullPath);
+                _name = Path.GetFileName("fichier origine absent");
+
+            }
             File.WriteAllBytes(destinationFullPath, mediaData);
 
             return destinationFullPath;

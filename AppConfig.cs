@@ -18,8 +18,10 @@ namespace MirzaMediaPlayer {
         private string _excelMediaListPath = @"Q:\zulu\Nouveau dossier\A134V3.xlsm";
 
 
-        private string _defaultVideoFullPath = @".\butiner.mp4"; //vidéo qui joue par défaut si le média n'existe pas. 
-                                                                 //    private SourceVideo _videoSource = SourceVideo.FromPath; //sourceVideo : d'où vient les path des fichiers lus
+//        private string _defaultVideoFullPath = @"pack://application:,,,/!fichiers/remove-tool.mp4";
+        private string _defaultVideoFullPath = @"./!fichiers/remove-tool.mp4";
+        //private string _defaultVideoFullPath = @".\butiner.mp4"; //vidéo qui joue par défaut si le média n'existe pas. 
+        //    private SourceVideo _videoSource = SourceVideo.FromPath; //sourceVideo : d'où vient les path des fichiers lus
         private SourceVideo _videoSource = SourceVideo.FromExcel; //sourceVideo : d'où vient les path des fichiers lus
         //private string _hiddenDirName = @"2ikljst!mbhoeujy4a1iqv"; //TODO _hiddenDirName _ répertoire pour mieux cacher les fichiers média sur l'ordinateur local
         private string repTempLocal = Path.Combine(Path.GetTempPath(), @"ZXD767B.tmp");
