@@ -12,7 +12,11 @@ namespace MirzaMediaPlayer {
             FromPath = 1,
         }
 
-        private string _excelMediaListPath = @"Q:\zulu\Nouveau dossier\A134V3.xlsm";  //liste de fichiers média dans un fichier excel
+
+        //Pointe vers un fichier Excel qui contient la liste de fichiers médias à lire par le lecteur (Celui-ci doit être fermé pour que le lecteur fonctionne)
+        private string _excelMediaListPath = @"Q:\zulu\Nouveau dossier\A134V3.xlsm";  
+
+
         private string _defaultVideoFullPath = @".\butiner.mp4"; //vidéo qui joue par défaut si le média n'existe pas. 
     //    private SourceVideo _videoSource = SourceVideo.FromPath; //sourceVideo : d'où vient les path des fichiers lus
         private SourceVideo _videoSource = SourceVideo.FromExcel; //sourceVideo : d'où vient les path des fichiers lus
