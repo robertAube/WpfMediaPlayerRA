@@ -11,7 +11,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <!-- Zone vidéo + contrôles -->
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="150"/>
             <!-- Liste des fichiers -->
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -46,14 +46,15 @@
                       Click="StopButton_Click"/>
 
                     <!-- Vitesse -->
-                    <TextBlock Text="Vitesse :" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text="   Vitesse : " Foreground="White" VerticalAlignment="Center"/>
                     <Slider x:Name="SpeedSlider"
                       Width="200"
                       Minimum="0.25" Maximum="3.0"
                       Value="1.0"
                       TickFrequency="0.25"
                       IsSnapToTickEnabled="True"
-                      
+                      VerticalAlignment="Center"
+                            
                       ValueChanged="SpeedSlider_ValueChanged"/>
                     <TextBlock x:Name="SpeedValueText"
                          Text="1.00x"
@@ -64,7 +65,7 @@
 
                 <!-- Ligne position (seek) -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
-                    <TextBlock x:Name="CurrentTimeText" Text="00:00" Foreground="White" Width="60" TextAlignment="Right"/>
+                    <TextBlock x:Name="CurrentTimeText" Text="00:00" Foreground="White" Width="50" />
                     <Slider x:Name="PositionSlider"
                         Minimum="0" Maximum="1"
                         ValueChanged="PositionSlider_ValueChanged"
@@ -86,19 +87,19 @@
                             </ControlTemplate>
                         </Slider.Template>
                     </Slider>
-                    <TextBlock x:Name="TotalTimeText" Text="" Foreground="White" Width="60"/>
+                    <TextBlock x:Name="TotalTimeText" Text="" Foreground="White" Width="50"/>
                 </StackPanel>
 
                 <!-- Sliders limites début et fin -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
-                    <TextBlock Text="Début :" Foreground="White" Width="60" />
+                    <TextBlock Text="Début :" Foreground="White" Width="50" />
                     <Slider x:Name="StartLimitSlider" Minimum="0" Maximum="1" Width="480" ValueChanged="StartLimitSlider_ValueChanged"/>
-                    <TextBlock x:Name="StartLimitText" Text="0%" Foreground="White" Width="50"/>
+                    <TextBlock x:Name="StartLimitText" Text="0%" Foreground="White" Width="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"  >
-                    <TextBlock Text="Fin :" Foreground="White" Width="60"/>
+                    <TextBlock Text="Fin :" Foreground="White" Width="50"/>
                     <Slider x:Name="EndLimitSlider" Minimum="0" Maximum="1" Width="480" ValueChanged="EndLimitSlider_ValueChanged"/>
-                    <TextBlock x:Name="EndLimitText" Text="100%" Foreground="White" Width="50"/>
+                    <TextBlock x:Name="EndLimitText" Text="100%" Foreground="White" Width="40"/>
                 </StackPanel>
             </StackPanel>
         </Border>

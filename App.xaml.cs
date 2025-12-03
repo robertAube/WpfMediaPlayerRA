@@ -30,8 +30,8 @@ namespace WpfMediaPlayerRA {
             // Charger en arrière-plan sans bloquer l'UI
             await Task.Run(() =>
             {
-                // Simuler un chargement lourd (ex: init libVCL)
-                //                Thread.Sleep(1000);
+                // Simuler un chargement lourd 
+ //                   Thread.Sleep(3000);
                 mainWindow.gererArguments();
 //                mainWindow.initListView();
                 mainWindow.initVLC();
