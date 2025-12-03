@@ -24,7 +24,7 @@ namespace WpfMediaPlayerRA.UtilWpf {
 
         public float StartLimit {
             set {
-                sliderStartLimit.Value = value;
+                    sliderStartLimit.Value = value;
             }
             get { return (float)sliderStartLimit.Value; }
         }

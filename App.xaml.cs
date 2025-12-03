@@ -6,18 +6,41 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace WpfMediaPlayerRA
-{
+namespace WpfMediaPlayerRA {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
-    {
-        public LViewGlobal listViewG { get; set; } = new LViewGlobal();
+    public partial class App : Application {
+        public LViewGlobal listViewG { get; set; }
         protected override void OnExit(ExitEventArgs e) {
             // Utiliser les données transmises par MainWindow
             listViewG.supprimerFichierLocal();
             base.OnExit(e);
+        }
+
+        protected override async void OnStartup(StartupEventArgs e) {
+            base.OnStartup(e);
+
+            var splash = new SplashWindow();
+            splash.Show();
+            listViewG = new LViewGlobal();
+
+
+            var mainWindow = new MainWindow();
+            // Charger en arrière-plan sans bloquer l'UI
+            await Task.Run(() =>
+            {
+                // Simuler un chargement lourd (ex: init libVCL)
+                //                Thread.Sleep(1000);
+                mainWindow.gererArguments();
+//                mainWindow.initListView();
+                mainWindow.initVLC();
+ //               mainWindow.initListView();
+            });
+
+            mainWindow.Show();
+            splash.Close();
+            
         }
     }
 

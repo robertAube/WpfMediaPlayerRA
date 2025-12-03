@@ -46,7 +46,7 @@ namespace WpfMediaPlayerRA {
         }
         #region init
         private void init() {
-            gererArguments();
+            gererArguments(); //TODO gérerArguments devrait être
             initListView();
             timer_init();
             initMediaPlayer();
@@ -54,7 +54,7 @@ namespace WpfMediaPlayerRA {
             initFermeture();
         }
 
-        private void gererArguments() {
+        public void gererArguments() {
             string[] args = Environment.GetCommandLineArgs();
 
             traiterNomDeFichierExcel(args);
@@ -75,11 +75,16 @@ namespace WpfMediaPlayerRA {
             app.listViewG._mediaPlayer = _mediaPlayer;
         }
 
-        private void initListView() {
+        public void initListView() {
             playListLV = new PlayListLV(FilesListView, MEDIA_PATH, StartLimitSlider, EndLimitSlider); // Charge les fichiers dans la ListView
                                                                                                       //            sliderStartEnd = new SliderStartEnd(StartLimitSlider, EndLimitSlider);
         }
 
+        public void initVLC() {
+            Core.Initialize();
+
+            _libVLC = new LibVLC();
+        }
         private void initMediaPlayer() {
             Core.Initialize();
 
