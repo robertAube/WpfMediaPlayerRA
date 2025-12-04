@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Office2010.PowerPoint;
 using LibVLCSharp.Shared;
 using Models;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -8,6 +9,7 @@ using System.Windows.Threading;
 using WpfMediaPlayerRA.models.playList;
 using WpfMediaPlayerRA.myutil;
 using WpfMediaPlayerRA.UtilWpf;
+using static WpfMediaPlayerRA.AppConfig;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 
@@ -61,10 +63,15 @@ namespace WpfMediaPlayerRA {
 
         private void traiterNomDeFichierExcel(string[] args) {
             string? fichierExcel = args.FirstOrDefault(a => a.EndsWith(".xlsm", StringComparison.OrdinalIgnoreCase));
-            if (fichierExcel != null) {
+            if (fichierExcel != null) { //si fichier excel reçu en argument premier pris en compte
                 AppConfig.ExcelMediaListPath = fichierExcel;
                 AppConfig.VideoSource = AppConfig.SourceVideo.FromExcel;
-            }
+            } //fichier excelDefaut existe et qu'on demande un fichier excel
+            else if (AppConfig.VideoSource == SourceVideo.FromExcel) {
+                if (File.Exists(AppConfig.DefaultExcelMediaListPath)) {
+                    AppConfig.ExcelMediaListPath = AppConfig.DefaultExcelMediaListPath;
+                }
+            } 
             //            bool safeMode = args.Any(a => a.Equals("--safe", StringComparison.OrdinalIgnoreCase));
         }
 

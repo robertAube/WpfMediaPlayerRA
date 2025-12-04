@@ -10,12 +10,11 @@ namespace WpfMediaPlayerRA {
 
         public readonly string baseDir = AppDomain.CurrentDomain.BaseDirectory; // pointe vers bin\Debug ou bin\Release
 
-        private readonly string _defaultExcelName = @"A134V3.xlsm";
         //Pointe vers un fichier Excel qui contient la liste de fichiers médias à lire par le lecteur (Celui-ci doit être fermé pour que le lecteur fonctionne)
-        private readonly string _excelMediaListPathDefaut = AppConfigLocal.EXCEL_MEDIA_LIST; //si n'hexiste pas, prends dans le répertoire courant
         private string _excelMediaListPath = @"";
 
         private readonly string _defaultVideoName = @"remove-tool.mp4";
+        private string _DefaultExcelMediaListPath;
         //private string _defaultVideoFullPath = @".\butiner.mp4"; //vidéo qui joue par défaut si le média n'existe pas. 
 
         //    private SourceVideo _videoSource = SourceVideo.FromPath; //sourceVideo : d'où vient les path des fichiers lus
@@ -30,15 +29,26 @@ namespace WpfMediaPlayerRA {
             }
         }
 
-        public string ExcelMediaListPath {
-            get => Util.ConvertToAbsolutePath(_excelMediaListPath);
-            set {
-                if (File.Exists(_excelMediaListPathDefaut))
-                    _excelMediaListPath = _excelMediaListPathDefaut;
+        public string DefaultExcelMediaListPath {
+            get {
+                if (File.Exists(AppConfigLocal.EXCEL_MEDIA_LIST))
+                    _DefaultExcelMediaListPath = AppConfigLocal.EXCEL_MEDIA_LIST;
                 else
-                    _excelMediaListPath = Path.Combine(baseDir, "Assets", _defaultExcelName);  // OnPropertyChanged(); }
+                    _DefaultExcelMediaListPath = Path.Combine(baseDir, "Assets", AppConfigLocal.DEFAULT_EXCEL_NAME);  // OnPropertyChanged(); }
+                return _DefaultExcelMediaListPath;
             }
         }
+
+        public string ExcelMediaListPath {
+            get {
+                    return _excelMediaListPath;
+            }
+            set {
+                _excelMediaListPath = value;
+            }
+        }
+
+
 
         public string DefaultVideoFullPath {
             get => Path.Combine(baseDir, "Assets", "Videos", _defaultVideoName);
