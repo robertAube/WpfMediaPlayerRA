@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Ajout Robert Aubé
+# Fichier local à exclure
+AppConfigLocal.cs
+
 # User-specific files
 *.rsuser
 *.suo
