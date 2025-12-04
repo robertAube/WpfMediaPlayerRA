@@ -1,16 +1,9 @@
-﻿using DocumentFormat.OpenXml.Packaging;
-using MirzaMediaPlayer;
-using MyUtil;
+﻿using MyUtil;
 using Models;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using WpfMediaPlayerRA.UtilWpf;
-using static MirzaMediaPlayer.AppConfig;
+using static WpfMediaPlayerRA.AppConfig;
 
 namespace WpfMediaPlayerRA.models.playList {
     class PlayListLV {

@@ -1,6 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Office2010.PowerPoint;
 using LibVLCSharp.Shared;
-using MirzaMediaPlayer;
 using Models;
 using System.Windows;
 using System.Windows.Controls.Primitives;

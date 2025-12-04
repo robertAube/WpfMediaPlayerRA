@@ -11,29 +11,36 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="!fichiers\remove-tool.mp4" />
-    <None Remove="icon\player_play_vert%28128%29.png" />
-    <None Remove="icon\player_rewind%2812%29.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="icon\player_play(32).ico" />
   </ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+		<Content Include="Assets\**\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+		</Content>
+		<Content Include="Assets\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="Assets\Images\player_play_vert%28128%29.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="icon\player_play_vert%28128%29.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Assets\Images\player_play_vert%28128%29.png" />
+	</ItemGroup>
+
+	<ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="LibVLCSharp.WPF" Version="3.9.4" />
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="!fichiers\remove-tool.mp4">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CustomToolNamespace></CustomToolNamespace>
-    </Resource>
-    <Resource Include="icon\player_play_vert(128).png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
 
   <ItemGroup>
