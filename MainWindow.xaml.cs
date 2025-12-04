@@ -44,6 +44,12 @@ namespace WpfMediaPlayerRA {
             InitializeComponent();
 
             init();
+
+            demarrerPremiereVideo();
+        }
+
+        private void demarrerPremiereVideo() {
+                playListLV.select(0);
         }
         #region init
         private void init() {
@@ -52,7 +58,8 @@ namespace WpfMediaPlayerRA {
             timer_init();
             initMediaPlayer();
             initButton();
-            initFermeture();
+            initFermeture(); //pour supprimer les fichiers à la fin
+
         }
 
         public void gererArguments() {

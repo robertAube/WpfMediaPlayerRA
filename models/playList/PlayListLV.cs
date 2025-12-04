@@ -77,5 +77,10 @@ namespace WpfMediaPlayerRA.models.playList {
             }
         }
 
+        internal void select(int index) {
+            if (listView.Items.Count > 0 && index < listView.Items.Count) { 
+                listView.SelectedIndex = index;
+            }
+        }
     }
 }
