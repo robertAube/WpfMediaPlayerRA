@@ -13,10 +13,9 @@ namespace WpfMediaPlayerRA {
         //Pointe vers un fichier Excel qui contient la liste de fichiers médias à lire par le lecteur (Celui-ci doit être fermé pour que le lecteur fonctionne)
         private string _excelMediaListPath = @"";
 
-        private readonly string _defaultVideoName = @"remove-tool.mp4";
+        private readonly string _defaultVideoName = @"butiner.mp4"; //vidéo qui joue par défaut si le média n'existe pas. 
         private string _DefaultExcelMediaListPath;
-        //private string _defaultVideoFullPath = @".\butiner.mp4"; //vidéo qui joue par défaut si le média n'existe pas. 
-
+        
         //    private SourceVideo _videoSource = SourceVideo.FromPath; //sourceVideo : d'où vient les path des fichiers lus
         private SourceVideo _videoSource = SourceVideo.FromExcel; //sourceVideo : d'où vient les path des fichiers lus
 
