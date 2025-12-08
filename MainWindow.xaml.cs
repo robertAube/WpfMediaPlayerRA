@@ -3,6 +3,7 @@ using LibVLCSharp.Shared;
 using Models;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -22,6 +23,7 @@ namespace WpfMediaPlayerRA {
         LibVLC _libVLC;
         MediaPlayer _mediaPlayer;
         private DispatcherTimer _timerUI;
+        private DispatcherTimer _slowTimerUI;
 
         private bool _isSeekingByUser = false;
         private bool _endReached = false;
@@ -30,8 +32,6 @@ namespace WpfMediaPlayerRA {
             get { return appConfig; }
         }
 
-        // Chemin d'exemple : remplace par ta vidéo
-        private static string MEDIA_PATH = @"Q:\zulu\Release\demo";
         private PlayListItem? selectedPlayListItem;
         private string _mediaPath;
         private SliderStartEnd sliderStartEnd;
@@ -44,12 +44,17 @@ namespace WpfMediaPlayerRA {
             InitializeComponent();
 
             init();
+            if (allowToPlay()) {
+                demarrerPremiereVideo();
+            }
+        }
 
-            demarrerPremiereVideo();
+        private bool allowToPlay() {
+            return AppConfig.SlowTimer && Path.Exists(appConfig.FilePathGo);
         }
 
         private void demarrerPremiereVideo() {
-                playListLV.select(0);
+            playListLV.select(0);
         }
         #region init
         private void init() {
@@ -59,7 +64,7 @@ namespace WpfMediaPlayerRA {
             initMediaPlayer();
             initButton();
             initFermeture(); //pour supprimer les fichiers à la fin
-
+            slowTimer_init();
         }
 
         public void gererArguments() {
@@ -72,13 +77,13 @@ namespace WpfMediaPlayerRA {
             string? fichierExcel = args.FirstOrDefault(a => a.EndsWith(".xlsm", StringComparison.OrdinalIgnoreCase));
             if (fichierExcel != null) { //si fichier excel reçu en argument premier pris en compte
                 AppConfig.ExcelMediaListPath = fichierExcel;
-                AppConfig.VideoSource = AppConfig.SourceVideo.FromExcel;
+                AppConfig.VideoSource = SourceVideo.FromExcel;
             } //fichier excelDefaut existe et qu'on demande un fichier excel
             else if (AppConfig.VideoSource == SourceVideo.FromExcel) {
                 if (File.Exists(AppConfig.DefaultExcelMediaListPath)) {
                     AppConfig.ExcelMediaListPath = AppConfig.DefaultExcelMediaListPath;
                 }
-            } 
+            }
             //            bool safeMode = args.Any(a => a.Equals("--safe", StringComparison.OrdinalIgnoreCase));
         }
 
@@ -89,8 +94,8 @@ namespace WpfMediaPlayerRA {
         }
 
         public void initListView() {
-            playListLV = new PlayListLV(FilesListView, MEDIA_PATH, StartLimitSlider, EndLimitSlider); // Charge les fichiers dans la ListView
-                                                                                                      //            sliderStartEnd = new SliderStartEnd(StartLimitSlider, EndLimitSlider);
+            playListLV = new PlayListLV(FilesListView, AppConfig.FileScanFullPath, StartLimitSlider, EndLimitSlider); // Charge les fichiers dans la ListView
+                                                                                                                      //            sliderStartEnd = new SliderStartEnd(StartLimitSlider, EndLimitSlider);
         }
 
         public void initVLC() {
@@ -99,10 +104,15 @@ namespace WpfMediaPlayerRA {
             _libVLC = new LibVLC();
         }
         private void initMediaPlayer() {
+            //var app = (App)Application.Current;
+            //_mediaPlayer = app.listViewG._mediaPlayer;
+
+            //TODO ce ne devrait pas être déjà initialisé dans App.
             Core.Initialize();
 
             _libVLC = new LibVLC();
             _mediaPlayer = new MediaPlayer(_libVLC);
+
 
             // we need the VideoView to be fully loaded before setting a MediaPlayer on it.
             VideoView.Loaded += (sender, e) => VideoView.MediaPlayer = _mediaPlayer;
@@ -112,7 +122,11 @@ namespace WpfMediaPlayerRA {
         }
         #endregion init
 
-        #region timer
+        #region timerVideo
+        private void timer_start() {
+            _timerUI.Start();
+            // TODO Certains conteneurs mal muxés (MKV sans cues, MP3 VBR sans index, AVI incomplet) peuvent ne pas exposer une durée fiable.
+        }
         private void timer_init() {
             // Timer UI : met à jour le slider de position et les textes
             _timerUI = new DispatcherTimer
@@ -120,11 +134,6 @@ namespace WpfMediaPlayerRA {
                 Interval = TimeSpan.FromMilliseconds(TIMER_SPEED)
             };
             _timerUI.Tick += timer_event;
-        }
-
-        private void timer_start() {
-            _timerUI.Start();
-            // TODO Certains conteneurs mal muxés (MKV sans cues, MP3 VBR sans index, AVI incomplet) peuvent ne pas exposer une durée fiable.
         }
 
         private void timer_event(object sender, EventArgs e) {
@@ -154,7 +163,29 @@ namespace WpfMediaPlayerRA {
                 CurrentTimeText.Text = UtilDateTime.FormatTime(currentMs);
             }
         }
-        #endregion timer
+        #endregion timerVideo
+
+        private void slowTimer_init() {
+            if (AppConfig.SlowTimer) {
+                // Timer UI : met à jour le slider de position et les textes
+                _slowTimerUI = new DispatcherTimer
+                {
+                    Interval = TimeSpan.FromMilliseconds(TIMER_SPEED * 10)
+                };
+                _slowTimerUI.Tick += slowTimer_event;
+                _slowTimerUI.Start();
+            }
+        }
+        private void slowTimer_event(object? sender, EventArgs e) {
+            if (_mediaPlayer == null)
+                return;
+            if (!allowToPlay()) {
+                var app = (App)Application.Current;
+                app.listViewG.listView.SelectedItem = null;
+                stopMedia();
+            }
+        }
+
 
         #region main events
         private void MediaPlayer_EndReached(object? sender, EventArgs e) {
@@ -164,11 +195,17 @@ namespace WpfMediaPlayerRA {
 
 
         void StopButton_Click(object sender, RoutedEventArgs e) {
-            if (VideoView.MediaPlayer.IsPlaying) {
-                VideoView.MediaPlayer.Stop();
-                PositionSlider.Value = 0;
-                CurrentTimeText.Text = "00:00";
-                _timerUI.Stop();
+            stopMedia();
+        }
+
+        private void stopMedia() {
+            if (VideoView.MediaPlayer != null) {
+                if (VideoView.MediaPlayer.IsPlaying) {
+                    VideoView.MediaPlayer.Stop();
+                    PositionSlider.Value = 0;
+                    CurrentTimeText.Text = "00:00";
+                    _timerUI.Stop();
+                }
             }
         }
 
@@ -302,23 +339,25 @@ namespace WpfMediaPlayerRA {
         //    TotalTimeText.Text = FormatTime(_mediaPlayer.Length);
         //}
         private async Task OpenAndPlayAsync(string filePath) {
-            var media = new LibVLCSharp.Shared.Media(_libVLC, filePath, FromType.FromPath);
+            if (AppConfig.SlowTimer && allowToPlay()) {
+                var media = new LibVLCSharp.Shared.Media(_libVLC, filePath, FromType.FromPath);
 
-            btnPlayPause.Content = "Pause";
-            btnPlayPause.IsChecked = true;
-            timer_start();
+                btnPlayPause.Content = "Pause";
+                btnPlayPause.IsChecked = true;
+                timer_start();
 
-            await media.Parse(MediaParseOptions.ParseLocal);
+                await media.Parse(MediaParseOptions.ParseLocal);
 
-            int retries = 20;
-            while (media.Duration == 0 && retries-- > 0) {
-                await Task.Delay(100);
+                int retries = 20;
+                while (media.Duration == 0 && retries-- > 0) {
+                    await Task.Delay(100);
+                }
+                _dureeMiliSeconde = media.Duration;
+                TotalTimeText.Text = UtilDateTime.FormatTime(_dureeMiliSeconde);
+
+
+                _mediaPlayer.Play(media);
             }
-            _dureeMiliSeconde = media.Duration;
-            TotalTimeText.Text = UtilDateTime.FormatTime(_dureeMiliSeconde);
-
-
-            _mediaPlayer.Play(media);
         }
         private async Task mettreAJourDureeAsync(LibVLCSharp.Shared.Media media) {
             // Parse le média pour obtenir la durée

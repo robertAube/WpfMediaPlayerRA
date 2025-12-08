@@ -34,7 +34,7 @@ namespace WpfMediaPlayerRA {
       //           Thread.Sleep(8000);
                 mainWindow.gererArguments();
 //                mainWindow.initListView();
-                mainWindow.initVLC();
+//                mainWindow.initVLC();  //TODO devrait être initialis. tôt!
  //               mainWindow.initListView();
             });
 

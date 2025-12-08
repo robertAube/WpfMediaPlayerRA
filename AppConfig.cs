@@ -22,6 +22,14 @@ namespace WpfMediaPlayerRA {
         //private string _hiddenDirName = @"2ikljst!mbhoeujy4a1iqv"; //TODO _hiddenDirName _ répertoire pour mieux cacher les fichiers média sur l'ordinateur local
         private string repTempLocal = Path.Combine(Path.GetTempPath(), @"ZXD767B.tmp");
 
+
+        // Chemin d'exemple : remplace par ta vidéo
+        private string fileScanFullPath = @"Q:\zulu\Release\demo";
+
+        // 
+        private string filePathGo = @"Q:\Cours\!A2025\420-134-Interface WEB (RA)\go";
+        private bool slowTimer = AppConfigLocal.SLOW_TIMER;
+
         public AppConfig() {
             if (!Directory.Exists(repTempLocal)) {
                 Directory.CreateDirectory(repTempLocal);
@@ -61,6 +69,9 @@ namespace WpfMediaPlayerRA {
         }
 
         public string RepTempLocal { get => repTempLocal; }
+        public string FileScanFullPath { get => fileScanFullPath; set => fileScanFullPath = value; }
+        public string FilePathGo { get => filePathGo; set => filePathGo = value; }
+        public bool SlowTimer { get => slowTimer; set => slowTimer = value; }
     }
 
 }
