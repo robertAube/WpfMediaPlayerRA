@@ -27,7 +27,8 @@ namespace WpfMediaPlayerRA {
         private string fileScanFullPath = @"Q:\zulu\Release\demo";
 
         // 
-        private string filePathGo = @"Q:\Cours\!A2025\420-134-Interface WEB (RA)\go";
+//        private string filePathGo = @"Q:\Cours\!A2025\420-134-Interface WEB (RA)\go";
+        private string filePathGo = @"Q:\un peu de tout\lecteurCL_V1\go";
         private bool slowTimer = AppConfigLocal.SLOW_TIMER;
 
         public AppConfig() {

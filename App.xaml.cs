@@ -18,30 +18,22 @@ namespace WpfMediaPlayerRA {
             base.OnExit(e);
         }
 
-        protected override async void OnStartup(StartupEventArgs e) {
+        protected override void OnStartup(StartupEventArgs e) {
             base.OnStartup(e);
 
             var splash = new SplashWindow();
             splash.Show();
             listViewG = new LViewGlobal();
 
-
-            var mainWindow = new MainWindow();
-            // Charger en arrière-plan sans bloquer l'UI
-            await Task.Run(() =>
-            {
-                // Simuler un chargement lourd
-      //           Thread.Sleep(8000);
-                mainWindow.gererArguments();
-//                mainWindow.initListView();
-//                mainWindow.initVLC();  //TODO devrait être initialis. tôt!
- //               mainWindow.initListView();
-            });
+        //    Thread.Sleep(6000);
+            // peut être long
+            var mainWindow = new MainWindow(); //tous les inits sont fais dont charger VLC, les vidéos etc...
 
             mainWindow.Show();
+
             splash.timer_stop();
             splash.Close();
-            
+
         }
     }
 

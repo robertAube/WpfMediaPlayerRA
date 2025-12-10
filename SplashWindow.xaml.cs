@@ -24,7 +24,7 @@ namespace WpfMediaPlayerRA {
         public string[] _tabTxt = { "Chargement", "Chargement.", "Chargement..", "Chargement..." };
         private DispatcherTimer _timerUI;
         private int _iTxt = 0;
-        private readonly double TIMER_SPEED = 750;
+        private readonly double TIMER_SPEED = 400;
 
         public SplashWindow() {
             InitializeComponent();
@@ -33,21 +33,19 @@ namespace WpfMediaPlayerRA {
 
         private void init() {
             timer_init();
-            timer_start();
             txtChargement.Text = _tabTxt[++_iTxt % _tabTxt.Length];
         }
         #region timer
         private void timer_init() {
             // Timer UI : met à jour le slider de position et les textes
-            _timerUI = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(TIMER_SPEED)
-            };
+            _timerUI = new DispatcherTimer(
+                priority: DispatcherPriority.Render,          // plus haut que Normal, synchronisé avec le cycle de rendu
+                dispatcher: Application.Current.Dispatcher    // dispatcher du thread UI
+            );
+            _timerUI.Interval = TimeSpan.FromMilliseconds(TIMER_SPEED);
             _timerUI.Tick += timer_event;
-        }
-
-        private void timer_start() {
             _timerUI.Start();
+
         }
 
         public void timer_stop() {
@@ -55,7 +53,7 @@ namespace WpfMediaPlayerRA {
         }
 
 
-        private void timer_event(object sender, EventArgs e) {
+        private void timer_event(object? sender, EventArgs e) {
             txtChargement.Text = _tabTxt[++_iTxt % _tabTxt.Length];
         }
         #endregion timer

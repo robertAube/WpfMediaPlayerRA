@@ -24,6 +24,7 @@ namespace WpfMediaPlayerRA {
         MediaPlayer _mediaPlayer;
         private DispatcherTimer _timerUI;
         private DispatcherTimer _slowTimerUI;
+        private int nbErreur = 0;
 
         private bool _isSeekingByUser = false;
         private bool _endReached = false;
@@ -59,7 +60,7 @@ namespace WpfMediaPlayerRA {
         #region init
         private void init() {
             gererArguments(); //TODO gérerArguments devrait être
-            initListView();
+            initListView(); //fait 
             timer_init();
             initMediaPlayer();
             initButton();
@@ -104,15 +105,8 @@ namespace WpfMediaPlayerRA {
             _libVLC = new LibVLC();
         }
         private void initMediaPlayer() {
-            //var app = (App)Application.Current;
-            //_mediaPlayer = app.listViewG._mediaPlayer;
-
-            //TODO ce ne devrait pas être déjà initialisé dans App.
-            Core.Initialize();
-
-            _libVLC = new LibVLC();
+            initVLC();
             _mediaPlayer = new MediaPlayer(_libVLC);
-
 
             // we need the VideoView to be fully loaded before setting a MediaPlayer on it.
             VideoView.Loaded += (sender, e) => VideoView.MediaPlayer = _mediaPlayer;
@@ -140,27 +134,34 @@ namespace WpfMediaPlayerRA {
             if (_mediaPlayer == null || _isSeekingByUser)
                 return;
 
-            // fin atteinte
-            if (_endReached) {
-                _endReached = false;
-                _mediaPlayer.Stop();
-                _mediaPlayer.Position = 0f;
-                _mediaPlayer.Play();
+            try { //TODO ajouté parce qu'il arrive que mon lecteur a planté: cause inconnu :/ 
+                // fin atteinte
+                if (_endReached) {
+                    _endReached = false;
+                    _mediaPlayer.Stop();
+                    _mediaPlayer.Position = 0f;
+                    _mediaPlayer.Play();
+                }
+                // Position : 0..1 (float). Slider : 0..100
+                sliderStartEnd.gererSlider();
+
+                if (sliderStartEnd.haveToChangeMediaPosition(_mediaPlayer.Position)) {
+                    _mediaPlayer.Position = sliderStartEnd.getNewPosition(_mediaPlayer.Position);
+                }
+
+                float pos = _mediaPlayer.Position; // 0..1
+                PositionSlider.Value = pos;
+
+                // Temps courant (ms)
+                {
+                    long currentMs = _mediaPlayer.Time;
+                    CurrentTimeText.Text = UtilDateTime.FormatTime(currentMs);
+                }
+                throw new Exception("qaz");
             }
-            // Position : 0..1 (float). Slider : 0..100
-            sliderStartEnd.gererSlider();
-
-            if (sliderStartEnd.haveToChangeMediaPosition(_mediaPlayer.Position)) {
-                _mediaPlayer.Position = sliderStartEnd.getNewPosition(_mediaPlayer.Position);
-            }
-
-            float pos = _mediaPlayer.Position; // 0..1
-            PositionSlider.Value = pos;
-
-            // Temps courant (ms)
-            {
-                long currentMs = _mediaPlayer.Time;
-                CurrentTimeText.Text = UtilDateTime.FormatTime(currentMs);
+            catch (Exception ex) {
+                //on passe le clic
+                MessageBox.Show("Une erreur (" + ++nbErreur + "x) est survenue dans timer_event.\nAppelez votre enseignant!" + Environment.NewLine + ex.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         #endregion timerVideo
@@ -179,10 +180,17 @@ namespace WpfMediaPlayerRA {
         private void slowTimer_event(object? sender, EventArgs e) {
             if (_mediaPlayer == null)
                 return;
-            if (!allowToPlay()) {
-                var app = (App)Application.Current;
-                app.listViewG.listView.SelectedItem = null;
-                stopMedia();
+            try { //TODO ajouté parce qu'il arrive que mon lecteur a planté: cause inconnu :/ 
+
+                if (!allowToPlay()) {
+                    var app = (App)Application.Current;
+                    app.listViewG.listView.SelectedItem = null;
+                    stopMedia();
+                }
+            }
+            catch (Exception ex) {
+                //on passe le clic
+                MessageBox.Show("Une erreur (\" + ++nbErreur + \"x) est survenue dans slowTimer_event.\nAppelez votre enseignant!" + Environment.NewLine + ex.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -306,7 +314,7 @@ namespace WpfMediaPlayerRA {
                 return;
         }
 
-        private void FilesListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
+        private void FilesListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (FilesListView.SelectedItem != null) {
                 //if (selectedPlayListItem != null) {
                 //    selectedPlayListItem.Debut = sliderStartEnd.StartLimit;
@@ -318,13 +326,8 @@ namespace WpfMediaPlayerRA {
                 //                setLimitStartEnd();
 
                 _mediaPath = selectedPlayListItem.FullName;
-                OpenAndPlayAsync(_mediaPath);
+                _ = OpenAndPlayAsync(_mediaPath);
             }
-        }
-
-        private void setLimitStartEnd() {
-            sliderStartEnd.StartLimit = selectedPlayListItem.Debut;
-            sliderStartEnd.EndLimit = selectedPlayListItem.Fin;
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
@@ -359,11 +362,7 @@ namespace WpfMediaPlayerRA {
                 _mediaPlayer.Play(media);
             }
         }
-        private async Task mettreAJourDureeAsync(LibVLCSharp.Shared.Media media) {
-            // Parse le média pour obtenir la durée
 
-
-        }
 
         //private async Task mettreAJourDureeAsync(LibVLCSharp.Shared.Media media, System.Windows.Controls.TextBlock totalTimeText) {
         //    // Parse le média pour obtenir la durée
