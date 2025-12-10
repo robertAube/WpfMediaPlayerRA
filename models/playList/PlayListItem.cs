@@ -1,13 +1,11 @@
 ﻿using System.ComponentModel;
 using System.IO;
-using WpfMediaPlayerRA;
 using WpfMediaPlayerRA.UtilWpf;
-namespace Models {
+namespace WpfMediaPlayerRA.models.playList {
     public class PlayListItem : INotifyPropertyChanged {
         private string _icon, _name, _fullName;
         private SliderStartEnd sliderStartEnd;
 
-        public PlayListItem() { }
         public PlayListItem(string icon, string name, string fullname, SliderStartEnd sliderStartEnd) {
             Icon = icon;
             Name = name;
@@ -36,7 +34,7 @@ namespace Models {
             get { return _fullName; }
             set {
                 if (_fullName != value) {
-                    _fullName = setFichierLocal(value);
+                    _fullName = value;
                     OnPropertyChanged(nameof(FullName));
                 }
             }
@@ -46,31 +44,31 @@ namespace Models {
         public float Fin { get => sliderStartEnd.EndLimit; set => sliderStartEnd.EndLimit = value; }
         public SliderStartEnd SliderStartEnd { get => sliderStartEnd; set => sliderStartEnd = value; }
 
-        private string setFichierLocal(string path) {
-            string randomName = Path.GetRandomFileName();
-            string destinationFullPath;
-            byte[] mediaData;
+        //private string setFichierLocal(string path) {
+        //    string randomName = Path.GetRandomFileName();
+        //    string destinationFullPath;
+        //    byte[] mediaData;
 
-            //Path.GetTempPath() donne le dossier temporaire du système (ex. C:\Users\robert.aube\AppData\Local\Temp)
-            //       do { //s'Assurer de créer un nom de fichier inexistant
-            destinationFullPath = Path.Combine(MainWindow.AppConfig.RepTempLocal, randomName); // + Path.GetExtension(path));
-                                                                                               //     } while (!File.Exists(destinationFullPath));
+        //    //Path.GetTempPath() donne le dossier temporaire du système (ex. C:\Users\robert.aube\AppData\Local\Temp)
+        //    //       do { //s'Assurer de créer un nom de fichier inexistant
+        //    destinationFullPath = Path.Combine(MainWindow.AppConfig.RepTempLocal, randomName); // + Path.GetExtension(path));
+        //                                                                                       //     } while (!File.Exists(destinationFullPath));
 
-            //tester si fichier origine absent
-            //path = "kdsl;fks;lkf;alk";
+        //    //tester si fichier origine absent
+        //    //path = "kdsl;fks;lkf;alk";
 
-            if (File.Exists(path)) {
-                mediaData =  File.ReadAllBytes(path);
-            }
-            else {
-                mediaData = File.ReadAllBytes(MainWindow.AppConfig.DefaultVideoFullPath);
-                _name = Path.GetFileName("fichier origine absent");
+        //    if (File.Exists(path)) {
+        //        mediaData =  File.ReadAllBytes(path);
+        //    }
+        //    else {
+        //        mediaData = File.ReadAllBytes(MainWindow.AppConfig.DefaultVideoFullPath);
+        //        _name = Path.GetFileName("fichier origine absent");
 
-            }
-            File.WriteAllBytes(destinationFullPath, mediaData);
+        //    }
+        //    File.WriteAllBytes(destinationFullPath, mediaData);
 
-            return destinationFullPath;
-        }
+        //    return destinationFullPath;
+        //}
 
         public string toString() { return _name; }
 

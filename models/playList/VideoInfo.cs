@@ -1,12 +1,13 @@
 ﻿using MyUtil;
 
 
-namespace Models {
+namespace WpfMediaPlayerRA.models.playList {
     internal class VideoInfo {
         private string videoName, videoFullPath;
 
         public string VideoName {
             get { return videoName; }
+            set { videoName = value; }
         }
         public string VideoFullPath {
             get { return videoFullPath; }

@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel;
 
 using System.Collections.ObjectModel;
-namespace Models
-{
+namespace WpfMediaPlayerRA.models.playList {
     public class PlayListContainer : INotifyPropertyChanged
     {
-        private ObservableCollection<PlayListItemOld> _playListData = new ObservableCollection<PlayListItemOld>();
+        private ObservableCollection<PlayListItem> _playListData = new ObservableCollection<PlayListItem>();
         public PlayListContainer()
         {
             //For UI testing purpose: 
@@ -13,12 +12,12 @@ namespace Models
             //_playListData.Add(new PlayList("Icons/Music.ico", "test.mp3", "C:\\Musics\\test.mp3"));
             //_playListData.Add(new PlayList("Icons/Video.ico", "test.mp4", "C:\\Musics\\test.mp4"));
         }
-        public PlayListContainer(ObservableCollection<PlayListItemOld> playListData)
+        public PlayListContainer(ObservableCollection<PlayListItem> playListData)
         {
             this._playListData = playListData;
         }
 
-        public ObservableCollection<PlayListItemOld> PlayListData
+        public ObservableCollection<PlayListItem> PlayListData
         {
             get { return _playListData; }
             set

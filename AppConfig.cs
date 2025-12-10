@@ -20,15 +20,17 @@ namespace WpfMediaPlayerRA {
         private SourceVideo _videoSource = SourceVideo.FromExcel; //sourceVideo : d'où vient les path des fichiers lus
 
         //private string _hiddenDirName = @"2ikljst!mbhoeujy4a1iqv"; //TODO _hiddenDirName _ répertoire pour mieux cacher les fichiers média sur l'ordinateur local
-        private string repTempLocal = Path.Combine(Path.GetTempPath(), @"ZXD767B.tmp");
+        public static string DIR_TEMP_NAME = @"ZXD767B.tmp"; 
+
+        private string repTempLocal = Path.Combine(Path.GetTempPath(), DIR_TEMP_NAME); //Exemple: C:\Users\robert.aube\AppData\Local\Temp\ZXD767B.tmp\hw4rygn3.qfs
 
 
         // Chemin d'exemple : remplace par ta vidéo
         private string fileScanFullPath = @"Q:\zulu\Release\demo";
 
         // 
-//        private string filePathGo = @"Q:\Cours\!A2025\420-134-Interface WEB (RA)\go";
-        private string filePathGo = @"Q:\un peu de tout\lecteurCL_V1\go";
+        private string filePathGo = @"Q:\Cours\!A2025\420-134-Interface WEB (RA)\go";
+//        private string filePathGo = @"Q:\un peu de tout\lecteurCL_V1\go";
         private bool slowTimer = AppConfigLocal.SLOW_TIMER;
 
         public AppConfig() {

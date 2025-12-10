@@ -3,10 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         WindowStyle="None" ResizeMode="NoResize"
         ShowInTaskbar="False" Topmost="True"
-        Width="294" Height="183" Background="White"
+        Width="294" Height="190" Background="White"
         AllowsTransparency="False">
     <Grid>
-        <Image Source="/Assets/Images/player_play_vert(128).png" Width="128" Height="128" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black"/>
+                <GradientStop Color="White" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Image Source="/Assets/Images/player_play_vert(128).png" Width="109" Height="116" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,74,0,0">
             <Image.RenderTransform>
                 <ScaleTransform x:Name="scaleTransform" ScaleX="1" ScaleY="1"/>
             </Image.RenderTransform>
@@ -27,9 +33,9 @@
             </Image.Triggers>
         </Image>
 
-        <TextBlock Text=" V1.1 " FontSize="8" Foreground="Black" Margin="0,0,0,25"/>
-        <TextBlock x:Name="txtChargement"  Text="Chargement" FontSize="28" Foreground="#444"
-                   VerticalAlignment="Top" Margin="63,15,0,0"/>
+        <TextBlock Text=" V1.3" FontSize="8" Foreground="White" Margin="0,0,0,25"/>
+        <TextBlock x:Name="txtChargement"  Text="Chargement" FontSize="28" Foreground="White"
+                   VerticalAlignment="Top" Margin="63,15,33,0" Height="44"/>
     </Grid>
 </Window>
 
